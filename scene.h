@@ -92,9 +92,22 @@ protected:
 
     void DrawRegionsHelper(wxDC& dc, wxCoord x, bool firstTime);
 
+	void select(Node* node) {
+		if (m_active) {
+			m_active->select(false);
+			m_active = 0;
+		}
+		m_active = node;
+		if (m_active) {
+			m_active->select(true);
+		}
+		Refresh();
+	}
 private:
     MainFrame *m_owner;
 
+	Node*		m_active;
+	double		m_scale;
 	NodeList	 m_root;
     int          m_show;
     wxBitmap     m_smile_bmp;

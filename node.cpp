@@ -34,7 +34,7 @@ Node* Node::create(wxXmlNode* node2)
 		return new NodeCircle(node.get_int("x"), node.get_int("y"), node.get_int("radius"));
 	}
 	if (node->GetName() == "image") {
-		return new NodeImage(wxPoint(node.get_int("x"), node.get_int("y")), "logo.png");
+		return new NodeImage(wxPoint(node.get_int("x"), node.get_int("y")), node.get_str("path"));
 	}
 	return new NodeList();
 }
@@ -61,6 +61,16 @@ void NodeList::Draw(wxDC& dc)
 	for (list_type::iterator i=_child.begin();i != _child.end();++i) {
 		(*i)->Draw(dc);
 	}
+}
+
+Node* NodeList::find(int x, int y) {
+	for (list_type::reverse_iterator i=_child.rbegin();i != _child.rend();++i) {
+		Node* n = (*i)->find(x,y);
+		if (n) {
+			return n;
+		}
+	}
+	return NULL;
 }
 
 void NodeList::Add(Node* child)
@@ -125,6 +135,18 @@ void NodeCircle::Draw(wxDC& dc)
     dc.DrawCircle(_x, _y, _r);
 }
 
+int distance(const wxPoint& a, const wxPoint& b)
+{
+	float w = a.x - b.x;
+	float h = a.y - b.y;
+	return sqrtf(w*w+h*h);
+}
+
+Node* NodeCircle::find(int x, int y) {
+	return (distance(wxPoint(x,y),wxPoint(_x,_y)) <= _r) ? this : NULL;
+}
+
+
 wxXmlNode* NodeCircle::serialize() const
 {
 	wxXmlNode *node=new wxXmlNode(wxXML_ELEMENT_NODE,wxT("circle"));
@@ -147,13 +169,18 @@ NodeImage::NodeImage(const wxPoint& pos, const wxString& path) :
 
 void NodeImage::Draw(wxDC& dc)
 {
-	bool _selected = true;
 	dc.DrawBitmap(_image, _pos, true);
 	if (_selected) {
-		dc.SetPen(*wxGREEN_PEN);
+		dc.SetPen( wxPen( wxColor(255,0,0), 3));
 		dc.SetBrush(*wxTRANSPARENT_BRUSH);
 		dc.DrawRectangle(_pos, _image.GetSize());
 	}
+}
+
+Node* NodeImage::find(int x, int y) {
+	wxPoint r = _pos + _image.GetSize();
+	return (x >= _pos.x && y >= _pos.y && x <= r.x && y <= r.y)
+		? this : NULL;
 }
 
 wxXmlNode* NodeImage::serialize() const

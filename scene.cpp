@@ -108,11 +108,13 @@ Scene::Scene(wxWindow *parent, MainFrame* owner)
                            wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE)
 {
     m_owner = owner;
-    m_show = File_ShowDefault;
+    m_active = NULL;
+	m_show = File_ShowDefault;
     m_smile_bmp = wxBitmap(smile_xpm);
     m_std_icon = wxArtProvider::GetIcon(wxART_INFORMATION);
     m_clip = false;
     m_rubberBand = false;
+	m_scale = 0.7;
 #if wxUSE_GRAPHICS_CONTEXT
     m_useContext = false;
 #endif
@@ -1240,6 +1242,7 @@ void Scene::Draw(wxDC& pdc)
 
     dc.Clear();
 
+	dc.SetUserScale(m_scale, m_scale);
 	DrawBackground(dc);
 
 	m_root.Draw(dc);
@@ -1306,12 +1309,22 @@ void Scene::OnMouseMove(wxMouseEvent &event)
     {
         wxClientDC dc(this);
         PrepareDC(dc);
+		dc.SetUserScale(m_scale, m_scale);
 
         wxPoint pos = event.GetPosition();
         long x = dc.DeviceToLogicalX( pos.x );
         long y = dc.DeviceToLogicalY( pos.y );
+		const char* acts = "";
+		if (Node* act = m_root.find(x/m_scale,y/m_scale)) {
+			acts = act->ClassName();
+			this->SetCursor(wxCURSOR_SIZENS);
+		} else {
+			this->SetCursor(wxNullCursor);
+		}
+		
+
         wxString str;
-        str.Printf( wxT("Current mouse position: %d,%d"), (int)x, (int)y );
+        str.Printf( wxT("Current mouse position: %d,%d %s"), (int)x, (int)y ,acts);
 		m_owner->SetStatusText(str);
     }
 
@@ -1348,6 +1361,7 @@ void Scene::OnMouseDown(wxMouseEvent &event)
     event.GetPosition(&x,&y);
     CalcUnscrolledPosition( x, y, &xx, &yy );
     m_anchorpoint = wxPoint( xx , yy ) ;
+	this->select(m_root.find(xx/m_scale,yy/m_scale));
     m_currentpoint = m_anchorpoint ;
     m_rubberBand = true ;
     CaptureMouse() ;
@@ -1377,6 +1391,6 @@ void Scene::OnMouseUp(wxMouseEvent &event)
                          endpoint.x, endpoint.y);
         }
     }
-	m_show = m_show == MenuShow_Last ? MenuShow_First : m_show + 1;
+	//m_show = m_show == MenuShow_Last ? MenuShow_First : m_show + 1;
 }
 

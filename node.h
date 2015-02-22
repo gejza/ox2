@@ -16,11 +16,18 @@ class Node
 {
 public:
 	static Node* create(wxXmlNode* node);
+	Node() : _selected(false) {}
 	virtual ~Node() {}
 	virtual void Draw(wxDC& dc) = 0;
 	virtual wxXmlNode* serialize() const = 0;
 	virtual void tree(wxTreeCtrl* ctrl, const wxTreeItemId &parent);
 	virtual const char* ClassName() const = 0;
+	virtual Node* find(int x, int y) = 0;
+	virtual void select(bool selected) {
+		_selected = selected;
+	}
+protected:
+	bool _selected;
 };
 
 class NodeList : public Node
@@ -32,8 +39,9 @@ public:
 	virtual void load(wxXmlNode* node);
 	virtual void tree(wxTreeCtrl* ctrl, const wxTreeItemId &parent);
 	virtual const char* ClassName() const {
-		return "List";
+		return "list";
 	}
+	virtual Node* find(int x, int y);
 protected:
 	typedef std::vector<Node*> list_type;
 	list_type _child;
@@ -47,8 +55,9 @@ public:
 	virtual wxXmlNode* serialize() const;
 	//virtual void load(wxXmlNode* node);
 	virtual const char* ClassName() const {
-		return "Circle";
+		return "circle";
 	}
+	virtual Node* find(int x, int y);
 private:
 	int _x;
 	int _y;
@@ -64,8 +73,9 @@ public:
 	virtual wxXmlNode* serialize() const;
 	//virtual void load(wxXmlNode* node);
 	virtual const char* ClassName() const {
-		return "Image";
+		return "image";
 	}
+	virtual Node* find(int x, int y);
 private:
 	wxPoint _pos;
 	const wxBitmap _image;
