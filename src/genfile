@@ -1,0 +1,111 @@
+#!/bin/bash
+
+if [ $# -ne 1 ]
+then
+	echo "Usage: `basename $0` {arg}"
+	exit 65
+fi
+
+fn=$1
+
+if [ -e ${fn}.h ]
+then
+	echo "Error: ${fn}.h already exists."
+	exit 1
+fi
+
+if [ -e ${fn}.cpp ]
+then
+	echo "Error: ${fn}.cpp already exists."
+	exit 1
+fi
+
+
+cat > ${fn}.h <<END
+/* === Oxygine Scene Editor =================================================== */
+/*!	\file ${fn}.h
+**	\brief Template Header
+**
+**	\legal
+**	Copyright (c) 2015 Milan Dunghubel
+**
+**	This package is free software; you can redistribute it and/or
+**	modify it under the terms of the GNU General Public License as
+**	published by the Free Software Foundation; either version 2 of
+**	the License, or (at your option) any later version.
+**
+**	This package is distributed in the hope that it will be useful,
+**	but WITHOUT ANY WARRANTY; without even the implied warranty of
+**	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+**	General Public License for more details.
+**	\endlegal
+*/
+/* ========================================================================= */
+#pragma once
+
+/* === S T A R T =========================================================== */
+
+#ifndef __OXYGINE_SCENE_EDITOR_${fn^^}_H
+#define __OXYGINE_SCENE_EDITOR_${fn^^}_H
+
+/* === H E A D E R S ======================================================= */
+
+/* === M A C R O S ========================================================= */
+
+/* === T Y P E D E F S ===================================================== */
+
+/* === C L A S S E S & S T R U C T S ======================================= */
+
+namespace studio {
+
+}; // END of namespace studio
+
+/* === E N D =============================================================== */
+
+#endif // __OXYGINE_SCENE_EDITOR_${fn^^}_H
+END
+
+cat > ${fn}.cpp <<END
+/* === Oxygine Scene Editor================================================= */
+/*!	\file ${fn}.cpp
+**	\brief Template File
+**
+**	\$Id: ${fn}.cpp 1543 2008-02-01 09:37:47Z pabs $
+**
+**	\legal
+**	Copyright (c) 2015 Milan Dunghubel
+**
+**	This package is free software; you can redistribute it and/or
+**	modify it under the terms of the GNU General Public License as
+**	published by the Free Software Foundation; either version 2 of
+**	the License, or (at your option) any later version.
+**
+**	This package is distributed in the hope that it will be useful,
+**	but WITHOUT ANY WARRANTY; without even the implied warranty of
+**	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+**	General Public License for more details.
+**	\endlegal
+*/
+/* ========================================================================= */
+
+/* === H E A D E R S ======================================================= */
+#include "config.h"
+
+#include "${fn}.h"
+/*
+** Insert headers here
+*/
+
+/* === M A C R O S ========================================================= */
+
+/* === G L O B A L S ======================================================= */
+
+/* === P R O C E D U R E S ================================================= */
+
+/* === M E T H O D S ======================================================= */
+
+/* === E N T R Y P O I N T ================================================= */
+
+
+END
+
