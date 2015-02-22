@@ -1558,7 +1558,7 @@ wxAuiNotebook* MyFrame::CreateNotebook()
    ctrl->AddPage( new wxTextCtrl( ctrl, wxID_ANY, wxT("Some more text"),
                 wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxNO_BORDER) , wxT("wxTextCtrl 8") );
 	*/
-   MyCanvas* canvas = new MyCanvas(ctrl, this);
+   Scene* canvas = new Scene(ctrl, this);
    
    ctrl->AddPage(canvas, wxT("Canvas"));
 

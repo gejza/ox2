@@ -84,21 +84,21 @@ enum
     UserScale_ShrinkVertic,
 };
 // ----------------------------------------------------------------------------
-// MyCanvas
+// Scene
 // ----------------------------------------------------------------------------
 
 // the event tables connect the wxWidgets events with the functions (event
 // handlers) which process them.
-wxBEGIN_EVENT_TABLE(MyCanvas, wxScrolledWindow)
-    EVT_PAINT  (MyCanvas::OnPaint)
-    EVT_MOTION (MyCanvas::OnMouseMove)
-    EVT_LEFT_DOWN (MyCanvas::OnMouseDown)
-    EVT_LEFT_UP (MyCanvas::OnMouseUp)
+wxBEGIN_EVENT_TABLE(Scene, wxScrolledWindow)
+    EVT_PAINT  (Scene::OnPaint)
+    EVT_MOTION (Scene::OnMouseMove)
+    EVT_LEFT_DOWN (Scene::OnMouseDown)
+    EVT_LEFT_UP (Scene::OnMouseUp)
 wxEND_EVENT_TABLE()
 
 #include "smile.xpm"
 
-MyCanvas::MyCanvas(wxWindow *parent, MyFrame* owner)
+Scene::Scene(wxWindow *parent, MyFrame* owner)
 : wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxSize(400, 300),
                            wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE)
 {
@@ -114,7 +114,7 @@ MyCanvas::MyCanvas(wxWindow *parent, MyFrame* owner)
     m_useBuffer = false;
 }
 
-void MyCanvas::DrawTestBrushes(wxDC& dc)
+void Scene::DrawTestBrushes(wxDC& dc)
 {
     static const wxCoord WIDTH = 200;
     static const wxCoord HEIGHT = 80;
@@ -148,7 +148,7 @@ void MyCanvas::DrawTestBrushes(wxDC& dc)
 
 }
 
-void MyCanvas::DrawTestPoly(wxDC& dc)
+void Scene::DrawTestPoly(wxDC& dc)
 {
     wxBrush brushHatch(*wxRED, wxBRUSHSTYLE_FDIAGONAL_HATCH);
     dc.SetBrush(brushHatch);
@@ -185,7 +185,7 @@ void MyCanvas::DrawTestPoly(wxDC& dc)
     dc.DrawPolyPolygon(WXSIZEOF(count), count, star2, 450, 150);
 }
 
-void MyCanvas::DrawTestLines( int x, int y, int width, wxDC &dc )
+void Scene::DrawTestLines( int x, int y, int width, wxDC &dc )
 {
     dc.SetPen( wxPen( *wxBLACK, width ) );
     dc.SetBrush( *wxRED_BRUSH );
@@ -244,7 +244,7 @@ void MyCanvas::DrawTestLines( int x, int y, int width, wxDC &dc )
     dc.DrawLine( x+20, y+170, 100, y+170 );
 }
 
-void MyCanvas::DrawBackground(wxDC& dc)
+void Scene::DrawBackground(wxDC& dc)
 {
 	int inc = 20;
 	int width;
@@ -265,7 +265,7 @@ void MyCanvas::DrawBackground(wxDC& dc)
 	}
 }
 
-void MyCanvas::DrawDefault(wxDC& dc)
+void Scene::DrawDefault(wxDC& dc)
 {
     // Draw circle centered at the origin, then flood fill it with a different
     // color. Done with a wxMemoryDC because Blit (used by generic
@@ -478,7 +478,7 @@ void MyCanvas::DrawDefault(wxDC& dc)
     dc.DrawRectangle(x, y, totalWidth, totalHeight);
 }
 
-void MyCanvas::DrawText(wxDC& dc)
+void Scene::DrawText(wxDC& dc)
 {
     // set underlined font for testing
     dc.SetFont( wxFont(12, wxMODERN, wxNORMAL, wxNORMAL, true) );
@@ -561,9 +561,9 @@ static const struct
 
 #if wxUSE_GRAPHICS_CONTEXT
 #ifdef __WXGTK20__
-void MyCanvas::DrawAlpha(wxDC& WXUNUSED(dummyDC))
+void Scene::DrawAlpha(wxDC& WXUNUSED(dummyDC))
 #else
-void MyCanvas::DrawAlpha(wxDC& dc)
+void Scene::DrawAlpha(wxDC& dc)
 #endif
 {
 #ifdef __WXGTK__
@@ -618,7 +618,7 @@ static inline double DegToRad(double deg) { return (deg * M_PI) / 180.0; }
 
 // modeled along Robin Dunn's GraphicsContext.py sample
 
-void MyCanvas::DrawGraphics(wxGraphicsContext* gc)
+void Scene::DrawGraphics(wxGraphicsContext* gc)
 {
     wxFont font = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
     gc->SetFont(font,*wxBLACK);
@@ -729,7 +729,7 @@ void MyCanvas::DrawGraphics(wxGraphicsContext* gc)
 }
 #endif // wxUSE_GRAPHICS_CONTEXT
 
-void MyCanvas::DrawCircles(wxDC& dc)
+void Scene::DrawCircles(wxDC& dc)
 {
     int x = 100,
         y = 100,
@@ -792,7 +792,7 @@ void MyCanvas::DrawCircles(wxDC& dc)
 
 }
 
-void MyCanvas::DrawSplines(wxDC& dc)
+void Scene::DrawSplines(wxDC& dc)
 {
 #if wxUSE_SPLINES
     dc.DrawText(wxT("Some splines"), 10, 5);
@@ -880,7 +880,7 @@ void MyCanvas::DrawSplines(wxDC& dc)
 #endif
 }
 
-void MyCanvas::DrawGradients(wxDC& dc)
+void Scene::DrawGradients(wxDC& dc)
 {
     static const int TEXT_HEIGHT = 15;
 
@@ -1081,7 +1081,7 @@ void MyCanvas::DrawGradients(wxDC& dc)
 #endif // wxUSE_GRAPHICS_CONTEXT
 }
 
-void MyCanvas::DrawRegions(wxDC& dc)
+void Scene::DrawRegions(wxDC& dc)
 {
     dc.DrawText(wxT("You should see a red rect partly covered by a cyan one ")
                 wxT("on the left"), 10, 5);
@@ -1095,7 +1095,7 @@ void MyCanvas::DrawRegions(wxDC& dc)
     DrawRegionsHelper(dc, 350, false);
 }
 
-void MyCanvas::DrawRegionsHelper(wxDC& dc, wxCoord x, bool firstTime)
+void Scene::DrawRegionsHelper(wxDC& dc, wxCoord x, bool firstTime)
 {
     wxCoord y = 100;
 
@@ -1136,7 +1136,7 @@ void MyCanvas::DrawRegionsHelper(wxDC& dc, wxCoord x, bool firstTime)
     }
 }
 
-void MyCanvas::OnPaint(wxPaintEvent &WXUNUSED(event))
+void Scene::OnPaint(wxPaintEvent &WXUNUSED(event))
 {
     if ( m_useBuffer )
     {
@@ -1150,7 +1150,7 @@ void MyCanvas::OnPaint(wxPaintEvent &WXUNUSED(event))
     }
 }
 
-void MyCanvas::Draw(wxDC& pdc)
+void Scene::Draw(wxDC& pdc)
 {
 #if wxUSE_GRAPHICS_CONTEXT
     wxGCDC gdc;
@@ -1255,7 +1255,7 @@ void MyCanvas::Draw(wxDC& pdc)
     }
 }
 
-void MyCanvas::OnMouseMove(wxMouseEvent &event)
+void Scene::OnMouseMove(wxMouseEvent &event)
 {
 #if wxUSE_STATUSBAR
     {
@@ -1297,7 +1297,7 @@ void MyCanvas::OnMouseMove(wxMouseEvent &event)
 #endif // wxUSE_STATUSBAR
 }
 
-void MyCanvas::OnMouseDown(wxMouseEvent &event)
+void Scene::OnMouseDown(wxMouseEvent &event)
 {
     int x,y,xx,yy ;
     event.GetPosition(&x,&y);
@@ -1308,7 +1308,7 @@ void MyCanvas::OnMouseDown(wxMouseEvent &event)
     CaptureMouse() ;
 }
 
-void MyCanvas::OnMouseUp(wxMouseEvent &event)
+void Scene::OnMouseUp(wxMouseEvent &event)
 {
     if ( m_rubberBand )
     {

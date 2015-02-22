@@ -51,10 +51,10 @@ public:
 
 
 // define a scrollable canvas for drawing onto
-class MyCanvas: public wxScrolledWindow
+class Scene: public wxScrolledWindow
 {
 public:
-    MyCanvas( wxWindow *parent, MyFrame* owner );
+    Scene( wxWindow *parent, MyFrame* owner );
 
     void OnPaint(wxPaintEvent &event);
     void OnMouseMove(wxMouseEvent &event);
