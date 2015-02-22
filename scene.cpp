@@ -29,7 +29,7 @@
     #include "wx/wx.h"
 #endif
 
-#include "mycanvas.h"
+#include "scene.h"
 #include "mainframe.h"
 
 // ----------------------------------------------------------------------------

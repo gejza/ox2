@@ -33,7 +33,7 @@
 
 #include "sample.xpm"
 
-#include "mycanvas.h"
+#include "scene.h"
 #include "mainframe.h"
 
 
