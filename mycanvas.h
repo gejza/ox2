@@ -42,6 +42,14 @@
 #define TEST_CAIRO_EVERYWHERE 0
 
 class MyFrame;
+
+class Node
+{
+public:
+	void Draw(wxDC& dc);
+};
+
+
 // define a scrollable canvas for drawing onto
 class MyCanvas: public wxScrolledWindow
 {

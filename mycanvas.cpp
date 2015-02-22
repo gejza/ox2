@@ -1332,5 +1332,6 @@ void MyCanvas::OnMouseUp(wxMouseEvent &event)
                          endpoint.x, endpoint.y);
         }
     }
+	m_show = m_show == MenuShow_Last ? MenuShow_First : m_show + 1;
 }
 
