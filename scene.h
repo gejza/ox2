@@ -39,22 +39,15 @@
 #include "wx/graphics.h"
 #include "wx/overlay.h"
 
-#define TEST_CAIRO_EVERYWHERE 0
+#include "node.h"
 
-class MyFrame;
-
-class Node
-{
-public:
-	void Draw(wxDC& dc);
-};
-
+class MainFrame;
 
 // define a scrollable canvas for drawing onto
 class Scene: public wxScrolledWindow
 {
 public:
-    Scene( wxWindow *parent, MyFrame* owner );
+    Scene( wxWindow *parent, MainFrame* owner );
 
     void OnPaint(wxPaintEvent &event);
     void OnMouseMove(wxMouseEvent &event);
@@ -97,8 +90,9 @@ protected:
     void DrawRegionsHelper(wxDC& dc, wxCoord x, bool firstTime);
 
 private:
-    MyFrame *m_owner;
+    MainFrame *m_owner;
 
+	NodeList	 m_root;
     int          m_show;
     wxBitmap     m_smile_bmp;
     wxIcon       m_std_icon;

@@ -9,7 +9,7 @@
 // -- frame --
 class wxSizeReportCtrl;
 
-class MyFrame : public wxFrame
+class MainFrame : public wxFrame
 {
     enum
     {
@@ -65,14 +65,14 @@ class MyFrame : public wxFrame
     };
 
 public:
-    MyFrame(wxWindow* parent,
+    MainFrame(wxWindow* parent,
             wxWindowID id,
             const wxString& title,
             const wxPoint& pos = wxDefaultPosition,
             const wxSize& size = wxDefaultSize,
             long style = wxDEFAULT_FRAME_STYLE | wxSUNKEN_BORDER);
 
-    ~MyFrame();
+    ~MainFrame();
 
     wxAuiDockArt* GetDockArt();
     void DoUpdate();

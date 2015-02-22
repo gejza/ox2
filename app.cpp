@@ -9,7 +9,7 @@ bool MyApp::OnInit()
     if ( !wxApp::OnInit() )
         return false;
 
-    wxFrame* frame = new MyFrame(NULL,
+    wxFrame* frame = new MainFrame(NULL,
                                  wxID_ANY,
                                  wxT("wxAUI Sample Application"),
                                  wxDefaultPosition,

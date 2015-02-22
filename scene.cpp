@@ -98,7 +98,7 @@ wxEND_EVENT_TABLE()
 
 #include "smile.xpm"
 
-Scene::Scene(wxWindow *parent, MyFrame* owner)
+Scene::Scene(wxWindow *parent, MainFrame* owner)
 : wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxSize(400, 300),
                            wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE)
 {
@@ -112,6 +112,11 @@ Scene::Scene(wxWindow *parent, MyFrame* owner)
     m_useContext = false;
 #endif
     m_useBuffer = false;
+
+	m_root.Add(new NodeCircle(100,100,20));
+	m_root.Add(new NodeCircle(200,100,30));
+	m_root.Add(new NodeCircle(300,100,40));
+	m_root.Add(new NodeImage(wxPoint(250,100), "logo.png"));
 }
 
 void Scene::DrawTestBrushes(wxDC& dc)
@@ -1200,6 +1205,8 @@ void Scene::Draw(wxDC& pdc)
 
 	DrawBackground(dc);
 
+	m_root.Draw(dc);
+	/*
     switch ( m_show )
     {
         case File_ShowDefault:
@@ -1253,6 +1260,7 @@ void Scene::Draw(wxDC& pdc)
         default:
             break;
     }
+	*/
 }
 
 void Scene::OnMouseMove(wxMouseEvent &event)
