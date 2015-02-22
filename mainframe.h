@@ -9,6 +9,8 @@
 // -- frame --
 class wxSizeReportCtrl;
 
+class Scene;
+
 class MainFrame : public wxFrame
 {
     enum
@@ -83,7 +85,7 @@ public:
     wxTreeCtrl* CreateTreeCtrl();
     wxSizeReportCtrl* CreateSizeReportCtrl(int width = 80, int height = 80);
     wxPoint GetStartPosition();
-    wxHtmlWindow* CreateHTMLCtrl(wxWindow* parent = NULL);
+    //wxHtmlWindow* CreateHTMLCtrl(wxWindow* parent = NULL);
     wxAuiNotebook* CreateNotebook();
 
     wxString GetIntroText();
@@ -95,11 +97,9 @@ public:
 
     void OnCreateTree(wxCommandEvent& evt);
     void OnCreateGrid(wxCommandEvent& evt);
-    void OnCreateHTML(wxCommandEvent& evt);
     void OnCreateNotebook(wxCommandEvent& evt);
     void OnCreateText(wxCommandEvent& evt);
     void OnCreateSizeReport(wxCommandEvent& evt);
-    void OnChangeContentPane(wxCommandEvent& evt);
     void OnDropDownToolbarItem(wxAuiToolBarEvent& evt);
     void OnCreatePerspective(wxCommandEvent& evt);
     void OnCopyPerspectiveCode(wxCommandEvent& evt);
@@ -128,6 +128,7 @@ private:
     wxMenu* m_perspectives_menu;
     long m_notebook_style;
     long m_notebook_theme;
+	Scene* _scene;
 
     wxDECLARE_EVENT_TABLE();
 };

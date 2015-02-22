@@ -32,6 +32,11 @@
 #include "scene.h"
 #include "mainframe.h"
 
+#include <fstream>
+#include <json/writer.h>
+
+#include <wx/xml/xml.h>
+
 // ----------------------------------------------------------------------------
 // constants
 // ----------------------------------------------------------------------------
@@ -113,10 +118,42 @@ Scene::Scene(wxWindow *parent, MainFrame* owner)
 #endif
     m_useBuffer = false;
 
+	/*
 	m_root.Add(new NodeCircle(100,100,20));
 	m_root.Add(new NodeCircle(200,100,30));
 	m_root.Add(new NodeCircle(300,100,40));
 	m_root.Add(new NodeImage(wxPoint(250,100), "logo.png"));
+	this->Save(wxT("scene.xml"));
+	*/
+	this->Load(wxT("scene.xml"));
+
+}
+
+void Scene::Save(const wxString& fn)
+{
+	wxXmlDocument doc;
+	doc.SetRoot(m_root.serialize());
+	if (!doc.Save(fn, 2))
+	{
+		wxLogWarning (wxT("Problème avec la création du fichier de configuration %s"),wxT ("config.xml"));
+	}
+}
+
+void Scene::Load(const wxString& fn)
+{
+	wxXmlDocument doc;
+	if (!doc.Load(fn)) {
+		wxLogWarning (wxT("Problème avec la création du fichier de configuration %s"),wxT ("config.xml"));
+		return;
+	}
+	m_root.load(doc.GetRoot());
+}
+
+void Scene::UpdateTree(wxTreeCtrl* ctrl)
+{
+	ctrl->DeleteAllItems();
+	wxTreeItemId id;
+	m_root.tree(ctrl, id);
 }
 
 void Scene::DrawTestBrushes(wxDC& dc)

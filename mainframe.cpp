@@ -425,7 +425,6 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(MainFrame::ID_CreateTree, MainFrame::OnCreateTree)
     EVT_MENU(MainFrame::ID_CreateGrid, MainFrame::OnCreateGrid)
     EVT_MENU(MainFrame::ID_CreateText, MainFrame::OnCreateText)
-    EVT_MENU(MainFrame::ID_CreateHTML, MainFrame::OnCreateHTML)
     EVT_MENU(MainFrame::ID_CreateSizeReport, MainFrame::OnCreateSizeReport)
     EVT_MENU(MainFrame::ID_CreateNotebook, MainFrame::OnCreateNotebook)
     EVT_MENU(MainFrame::ID_CreatePerspective, MainFrame::OnCreatePerspective)
@@ -460,12 +459,6 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(ID_AllowToolbarResizing, MainFrame::OnToolbarResizing)
     EVT_MENU(ID_Settings, MainFrame::OnSettings)
     EVT_MENU(ID_CustomizeToolbar, MainFrame::OnCustomizeToolbar)
-    EVT_MENU(ID_GridContent, MainFrame::OnChangeContentPane)
-    EVT_MENU(ID_TreeContent, MainFrame::OnChangeContentPane)
-    EVT_MENU(ID_TextContent, MainFrame::OnChangeContentPane)
-    EVT_MENU(ID_SizeReportContent, MainFrame::OnChangeContentPane)
-    EVT_MENU(ID_HTMLContent, MainFrame::OnChangeContentPane)
-    EVT_MENU(ID_NotebookContent, MainFrame::OnChangeContentPane)
     EVT_MENU(wxID_EXIT, MainFrame::OnExit)
     EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
     EVT_UPDATE_UI(ID_NotebookTabFixedWidth, MainFrame::OnUpdateUI)
@@ -527,7 +520,6 @@ MainFrame::MainFrame(wxWindow* parent,
 
     wxMenu* view_menu = new wxMenu;
     view_menu->Append(ID_CreateText, _("Create Text Control"));
-    view_menu->Append(ID_CreateHTML, _("Create HTML Control"));
     view_menu->Append(ID_CreateTree, _("Create Tree"));
     view_menu->Append(ID_CreateGrid, _("Create Grid"));
     view_menu->Append(ID_CreateNotebook, _("Create Notebook"));
@@ -749,7 +741,8 @@ MainFrame::MainFrame(wxWindow* parent,
                   Left().Layer(1).
                   CloseButton(true).MaximizeButton(true));
 
-    m_mgr.AddPane(CreateTreeCtrl(), wxAuiPaneInfo().
+	wxTreeCtrl* _tree;
+    m_mgr.AddPane(_tree = CreateTreeCtrl(), wxAuiPaneInfo().
                   Name(wxT("test8")).Caption(wxT("Tree Pane")).
                   Left().Layer(1).Position(1).
                   CloseButton(true).MaximizeButton(true));
@@ -785,22 +778,6 @@ MainFrame::MainFrame(wxWindow* parent,
                   Dockable(false).Float().Hide());
 
     // create some center panes
-
-    m_mgr.AddPane(CreatePropGrid(), wxAuiPaneInfo().Name(wxT("grid_content")).
-                  CenterPane().Hide());
-
-    m_mgr.AddPane(CreateTreeCtrl(), wxAuiPaneInfo().Name(wxT("tree_content")).
-                  CenterPane().Hide());
-
-    m_mgr.AddPane(CreateSizeReportCtrl(), wxAuiPaneInfo().Name(wxT("sizereport_content")).
-                  CenterPane().Hide());
-
-    m_mgr.AddPane(CreateTextCtrl(), wxAuiPaneInfo().Name(wxT("text_content")).
-                  CenterPane().Hide());
-
-    m_mgr.AddPane(CreateHTMLCtrl(), wxAuiPaneInfo().Name(wxT("html_content")).
-                  CenterPane().Hide());
-
     m_mgr.AddPane(CreateNotebook(), wxAuiPaneInfo().Name(wxT("notebook_content")).
                   CenterPane().PaneBorder(false));
 
@@ -852,6 +829,7 @@ MainFrame::MainFrame(wxWindow* parent,
 
     // "commit" all changes made to wxAuiManager
     m_mgr.Update();
+	_scene->UpdateTree(_tree);
 }
 
 MainFrame::~MainFrame()
@@ -1263,15 +1241,6 @@ void MainFrame::OnCreateGrid(wxCommandEvent& WXUNUSED(event))
     m_mgr.Update();
 }
 
-void MainFrame::OnCreateHTML(wxCommandEvent& WXUNUSED(event))
-{
-    m_mgr.AddPane(CreateHTMLCtrl(), wxAuiPaneInfo().
-                  Caption(wxT("HTML Control")).
-                  Float().FloatingPosition(GetStartPosition()).
-                  FloatingSize(wxSize(300,200)));
-    m_mgr.Update();
-}
-
 void MainFrame::OnCreateNotebook(wxCommandEvent& WXUNUSED(event))
 {
     m_mgr.AddPane(CreateNotebook(), wxAuiPaneInfo().
@@ -1296,17 +1265,6 @@ void MainFrame::OnCreateSizeReport(wxCommandEvent& WXUNUSED(event))
                   Caption(wxT("Client Size Reporter")).
                   Float().FloatingPosition(GetStartPosition()).
                   CloseButton(true).MaximizeButton(true));
-    m_mgr.Update();
-}
-
-void MainFrame::OnChangeContentPane(wxCommandEvent& evt)
-{
-    m_mgr.GetPane(wxT("grid_content")).Show(evt.GetId() == ID_GridContent);
-    m_mgr.GetPane(wxT("text_content")).Show(evt.GetId() == ID_TextContent);
-    m_mgr.GetPane(wxT("tree_content")).Show(evt.GetId() == ID_TreeContent);
-    m_mgr.GetPane(wxT("sizereport_content")).Show(evt.GetId() == ID_SizeReportContent);
-    m_mgr.GetPane(wxT("html_content")).Show(evt.GetId() == ID_HTMLContent);
-    m_mgr.GetPane(wxT("notebook_content")).Show(evt.GetId() == ID_NotebookContent);
     m_mgr.Update();
 }
 
@@ -1487,7 +1445,7 @@ wxSizeReportCtrl* MainFrame::CreateSizeReportCtrl(int width, int height)
     return ctrl;
 }
 
-wxHtmlWindow* MainFrame::CreateHTMLCtrl(wxWindow* parent)
+/*wxHtmlWindow* MainFrame::CreateHTMLCtrl(wxWindow* parent)
 {
     if (!parent)
         parent = this;
@@ -1497,7 +1455,7 @@ wxHtmlWindow* MainFrame::CreateHTMLCtrl(wxWindow* parent)
                                    wxSize(400,300));
     ctrl->SetPage(GetIntroText());
     return ctrl;
-}
+}*/
 
 wxAuiNotebook* MainFrame::CreateNotebook()
 {
@@ -1512,7 +1470,7 @@ wxAuiNotebook* MainFrame::CreateNotebook()
 
    wxBitmap page_bmp = wxArtProvider::GetBitmap(wxART_NORMAL_FILE, wxART_OTHER, wxSize(16,16));
 
-   ctrl->AddPage(CreateHTMLCtrl(ctrl), wxT("Welcome to wxAUI") , false, page_bmp);
+   /*ctrl->AddPage(CreateHTMLCtrl(ctrl), wxT("Welcome to wxAUI") , false, page_bmp);
    ctrl->SetPageToolTip(0, "Welcome to wxAUI (this is a page tooltip)");
 
    wxPanel *panel = new wxPanel( ctrl, wxID_ANY );
@@ -1530,7 +1488,7 @@ wxAuiNotebook* MainFrame::CreateNotebook()
    flex->Add( 5,5 );   flex->Add( 5,5 );
    panel->SetSizer( flex );
    ctrl->AddPage( panel, wxT("wxPanel"), false, page_bmp );
-
+	*/
    /*
    ctrl->AddPage( new wxTextCtrl( ctrl, wxID_ANY, wxT("Some text"),
                 wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxNO_BORDER) , wxT("wxTextCtrl 1"), false, page_bmp );
@@ -1558,9 +1516,10 @@ wxAuiNotebook* MainFrame::CreateNotebook()
    ctrl->AddPage( new wxTextCtrl( ctrl, wxID_ANY, wxT("Some more text"),
                 wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxNO_BORDER) , wxT("wxTextCtrl 8") );
 	*/
-   Scene* canvas = new Scene(ctrl, this);
+   _scene = new Scene(ctrl, this);
    
-   ctrl->AddPage(canvas, wxT("Canvas"));
+   ctrl->AddPage(_scene, wxT("Canvas"), false, page_bmp);
+   ctrl->SetPageToolTip(0, "Welcome to wxAUI (this is a page tooltip)");
 
    ctrl->Thaw();
    return ctrl;

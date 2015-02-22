@@ -66,6 +66,9 @@ public:
     void Draw(wxDC& dc);
 	void DrawBackground(wxDC& dc);
 
+	void Load(const wxString& fn);
+	void Save(const wxString& fn);
+	void UpdateTree(wxTreeCtrl* ctrl);
 protected:
     enum DrawMode
     {
