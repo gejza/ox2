@@ -12,7 +12,9 @@ if(wxWidgets_FOUND)
 		add_definitions(-D_LINUX=1)
 	ENDIF(WIN32)
 	add_executable(SceneEditor WIN32
-		auidemo.cpp mycanvas.h mycanvas.cpp app.h app.cpp
+		auidemo.cpp 
+		mycanvas.h mycanvas.cpp app.h app.cpp
+		mainframe.h
 		)
 	target_link_libraries(SceneEditor ${wxWidgets_LIBRARIES})
 

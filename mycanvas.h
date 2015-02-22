@@ -41,11 +41,12 @@
 
 #define TEST_CAIRO_EVERYWHERE 0
 
+class MyFrame;
 // define a scrollable canvas for drawing onto
 class MyCanvas: public wxScrolledWindow
 {
 public:
-    MyCanvas( wxWindow *parent );
+    MyCanvas( wxWindow *parent, MyFrame* owner );
 
     void OnPaint(wxPaintEvent &event);
     void OnMouseMove(wxMouseEvent &event);
@@ -62,6 +63,7 @@ public:
     void UseBuffer(bool use) { m_useBuffer = use; Refresh(); }
 
     void Draw(wxDC& dc);
+	void DrawBackground(wxDC& dc);
 
 protected:
     enum DrawMode
@@ -87,7 +89,7 @@ protected:
     void DrawRegionsHelper(wxDC& dc, wxCoord x, bool firstTime);
 
 private:
-    //MyFrame *m_owner;
+    MyFrame *m_owner;
 
     int          m_show;
     wxBitmap     m_smile_bmp;

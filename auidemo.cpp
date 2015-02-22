@@ -786,7 +786,7 @@ MyFrame::MyFrame(wxWindow* parent,
 
     // create some center panes
 
-    m_mgr.AddPane(CreateGrid(), wxAuiPaneInfo().Name(wxT("grid_content")).
+    m_mgr.AddPane(CreatePropGrid(), wxAuiPaneInfo().Name(wxT("grid_content")).
                   CenterPane().Hide());
 
     m_mgr.AddPane(CreateTreeCtrl(), wxAuiPaneInfo().Name(wxT("tree_content")).
@@ -1256,7 +1256,7 @@ void MyFrame::OnCreateTree(wxCommandEvent& WXUNUSED(event))
 
 void MyFrame::OnCreateGrid(wxCommandEvent& WXUNUSED(event))
 {
-    m_mgr.AddPane(CreateGrid(), wxAuiPaneInfo().
+    m_mgr.AddPane(CreatePropGrid(), wxAuiPaneInfo().
                   Caption(wxT("Grid")).
                   Float().FloatingPosition(GetStartPosition()).
                   FloatingSize(wxSize(300,200)));
@@ -1404,14 +1404,39 @@ wxTextCtrl* MyFrame::CreateTextCtrl(const wxString& ctrl_text)
 }
 
 
-wxGrid* MyFrame::CreateGrid()
+wxPropertyGrid* MyFrame::CreatePropGrid()
 {
-    wxGrid* grid = new wxGrid(this, wxID_ANY,
-                              wxPoint(0,0),
-                              wxSize(150,250),
-                              wxNO_BORDER | wxWANTS_CHARS);
-    grid->CreateGrid(50, 20);
-    return grid;
+	// Construct wxPropertyGrid control
+	wxPropertyGrid* pg = new wxPropertyGrid(
+		this, // parent
+		wxID_ANY, // id
+		wxDefaultPosition, // position
+		wxSize(150, 250), // size
+		// Here are just some of the supported window styles
+		wxPG_AUTO_SORT | // Automatic sorting after items added
+		wxPG_SPLITTER_AUTO_CENTER | // Automatically center splitter until user manually adjusts it
+		// Default style
+		wxPG_DEFAULT_STYLE | wxNO_BORDER | wxWANTS_CHARS);
+	// Window style flags are at premium, so some less often needed ones are
+	// available as extra window styles (wxPG_EX_xxx) which must be set using
+	// SetExtraStyle member function. wxPG_EX_HELP_AS_TOOLTIPS, for instance,
+	// allows displaying help strings as tool tips.
+	pg->SetExtraStyle(wxPG_EX_HELP_AS_TOOLTIPS);
+	// One way to add category (similar to how other properties are added)
+	pg->Append(new wxPropertyCategory("Main"));
+	// All these are added to "Main" category
+	pg->Append(new wxStringProperty("Name"));
+	pg->Append(new wxIntProperty("Age", wxPG_LABEL, 25));
+	pg->Append(new wxIntProperty("Height", wxPG_LABEL, 180));
+	pg->Append(new wxIntProperty("Weight"));
+	// Another one
+	pg->Append(new wxPropertyCategory("Attributes"));
+	// All these are added to "Attributes" category
+	pg->Append(new wxIntProperty("Intelligence"));
+	pg->Append(new wxIntProperty("Agility"));
+	pg->Append(new wxIntProperty("Strength"));
+
+    return pg;
 }
 
 wxTreeCtrl* MyFrame::CreateTreeCtrl()
@@ -1506,7 +1531,7 @@ wxAuiNotebook* MyFrame::CreateNotebook()
    panel->SetSizer( flex );
    ctrl->AddPage( panel, wxT("wxPanel"), false, page_bmp );
 
-
+   /*
    ctrl->AddPage( new wxTextCtrl( ctrl, wxID_ANY, wxT("Some text"),
                 wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxNO_BORDER) , wxT("wxTextCtrl 1"), false, page_bmp );
 
@@ -1532,8 +1557,10 @@ wxAuiNotebook* MyFrame::CreateNotebook()
 
    ctrl->AddPage( new wxTextCtrl( ctrl, wxID_ANY, wxT("Some more text"),
                 wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxNO_BORDER) , wxT("wxTextCtrl 8") );
-
-	ctrl->AddPage(new MyCanvas(ctrl), wxT("Canvas") );
+	*/
+   MyCanvas* canvas = new MyCanvas(ctrl, this);
+   
+   ctrl->AddPage(canvas, wxT("Canvas"));
 
    ctrl->Thaw();
    return ctrl;

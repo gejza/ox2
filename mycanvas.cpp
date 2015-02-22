@@ -30,6 +30,7 @@
 #endif
 
 #include "mycanvas.h"
+#include "mainframe.h"
 
 // ----------------------------------------------------------------------------
 // constants
@@ -97,11 +98,11 @@ wxEND_EVENT_TABLE()
 
 #include "smile.xpm"
 
-MyCanvas::MyCanvas(wxWindow *parent)
-        : wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+MyCanvas::MyCanvas(wxWindow *parent, MyFrame* owner)
+: wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxSize(400, 300),
                            wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE)
 {
-    //m_owner = parent;
+    m_owner = owner;
     m_show = File_ShowDefault;
     m_smile_bmp = wxBitmap(smile_xpm);
     m_std_icon = wxArtProvider::GetIcon(wxART_INFORMATION);
@@ -241,6 +242,27 @@ void MyCanvas::DrawTestLines( int x, int y, int width, wxDC &dc )
     ud.SetDashes( 6, dash1 );
     dc.SetPen( ud );
     dc.DrawLine( x+20, y+170, 100, y+170 );
+}
+
+void MyCanvas::DrawBackground(wxDC& dc)
+{
+	int inc = 20;
+	int width;
+	int height;
+	dc.GetSize(&width, &height);
+	for (int x = 0; x < width; x += inc) {
+		for (int y = 0; y < height; y += inc) {
+			if ((x + y) / inc % 2) {
+				dc.SetPen(*wxWHITE_PEN);
+				dc.SetBrush(*wxWHITE_BRUSH);
+			}
+			else {
+				dc.SetPen(*wxLIGHT_GREY_PEN);
+				dc.SetBrush(*wxLIGHT_GREY_BRUSH);
+			}
+			dc.DrawRectangle(x, y, inc, inc);
+		}
+	}
 }
 
 void MyCanvas::DrawDefault(wxDC& dc)
@@ -1176,6 +1198,8 @@ void MyCanvas::Draw(wxDC& pdc)
 
     dc.Clear();
 
+	DrawBackground(dc);
+
     switch ( m_show )
     {
         case File_ShowDefault:
@@ -1243,6 +1267,7 @@ void MyCanvas::OnMouseMove(wxMouseEvent &event)
         long y = dc.DeviceToLogicalY( pos.y );
         wxString str;
         str.Printf( wxT("Current mouse position: %d,%d"), (int)x, (int)y );
+		m_owner->SetStatusText(str);
     }
 
     if ( m_rubberBand )

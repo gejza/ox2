@@ -4,6 +4,7 @@
 #include "wx/grid.h"
 #include "wx/treectrl.h"
 #include "wx/wxhtml.h"
+#include <wx/propgrid/propgrid.h>
 
 // -- frame --
 class wxSizeReportCtrl;
@@ -78,7 +79,7 @@ public:
 
 //private:
     wxTextCtrl* CreateTextCtrl(const wxString& text = wxEmptyString);
-    wxGrid* CreateGrid();
+    wxPropertyGrid* CreatePropGrid();
     wxTreeCtrl* CreateTreeCtrl();
     wxSizeReportCtrl* CreateSizeReportCtrl(int width = 80, int height = 80);
     wxPoint GetStartPosition();
