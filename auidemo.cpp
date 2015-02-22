@@ -37,6 +37,8 @@
 #include "wx/aui/aui.h"
 #include "sample.xpm"
 
+#include "mycanvas.h"
+
 // -- application --
 
 class MyApp : public wxApp
@@ -1687,6 +1689,8 @@ wxAuiNotebook* MyFrame::CreateNotebook()
 
    ctrl->AddPage( new wxTextCtrl( ctrl, wxID_ANY, wxT("Some more text"),
                 wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxNO_BORDER) , wxT("wxTextCtrl 8") );
+
+	ctrl->AddPage(new MyCanvas(ctrl), wxT("Canvas") );
 
    ctrl->Thaw();
    return ctrl;

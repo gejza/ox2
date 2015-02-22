@@ -53,7 +53,7 @@ WX_CONFIG_FLAGS = $(WX_CONFIG_UNICODE_FLAG) $(WX_CONFIG_SHARED_FLAG) \
 AUIDEMO_CXXFLAGS = -I. `$(WX_CONFIG) --cxxflags $(WX_CONFIG_FLAGS)` $(CPPFLAGS) \
 	$(CXXFLAGS)
 AUIDEMO_OBJECTS =  \
-	auidemo_auidemo.o
+	auidemo_auidemo.o auidemo_mycanvas.o
 
 ### Conditionally set variables: ###
 
@@ -92,6 +92,10 @@ auidemo: $(AUIDEMO_OBJECTS)
 
 auidemo_auidemo.o: ./auidemo.cpp
 	$(CXX) -c -o $@ $(AUIDEMO_CXXFLAGS) $(CPPDEPS) $<
+
+auidemo_mycanvas.o: ./mycanvas.cpp
+	$(CXX) -c -o $@ $(AUIDEMO_CXXFLAGS) $(CPPDEPS) $<
+
 
 .PHONY: all install uninstall clean
 
