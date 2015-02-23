@@ -1386,9 +1386,13 @@ void Scene::OnMouseUp(wxMouseEvent &event)
         // Don't pop up the message box if nothing was actually selected.
         if ( endpoint != m_anchorpoint )
         {
-            wxLogMessage("Selected rectangle from (%d, %d) to (%d, %d)",
-                         m_anchorpoint.x, m_anchorpoint.y,
-                         endpoint.x, endpoint.y);
+			Node* n = m_root.find(m_anchorpoint.x/m_scale,m_anchorpoint.y/m_scale);
+			if (n) {
+				n->move(endpoint);
+			}
+            //wxLogMessage("Selected rectangle from (%d, %d) to (%d, %d)",
+            //             m_anchorpoint.x, m_anchorpoint.y,
+            //             endpoint.x, endpoint.y);
         }
     }
 	//m_show = m_show == MenuShow_Last ? MenuShow_First : m_show + 1;

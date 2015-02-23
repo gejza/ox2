@@ -25,6 +25,7 @@ public:
 	virtual const char* ClassName() const = 0;
 	virtual Node* find(int x, int y) = 0;
 	virtual void select(bool selected);
+	virtual void move(const wxPoint& pos) {}
 protected:
 	wxTreeItemId _tree_id;
 	bool _selected;
@@ -95,6 +96,9 @@ public:
 		return "image";
 	}
 	virtual Node* find(int x, int y);
+	virtual void move(const wxPoint& pos) {
+		_pos = pos;
+	}
 private:
 	wxPoint _pos;
 	const wxBitmap _image;

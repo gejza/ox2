@@ -1,35 +1,47 @@
 #include "app.h"
 #include "mainframe.h"
-#include "SplashScreen.h"
+#include <wx/splash.h>
 
 IMPLEMENT_APP(MyApp)
 
 
 bool MyApp::OnInit()
 {
-	// make sure to call this first
-	wxInitAllImageHandlers();
-
 	if ( !wxApp::OnInit() )
         return false;
 
-//Splash screen
-    wxBitmap bitmap;
-    bitmap.LoadFile( wxString("GD-Splashscreen.png"), wxBITMAP_TYPE_PNG );
-    SplashScreen * splash = new SplashScreen(bitmap, 8, 0, -1, wxNO_BORDER | wxFRAME_SHAPED);
-	std::cout << "* Splash Screen created" << std::endl;
+	// make sure to call this first
+	::wxInitAllImageHandlers();
 
-    wxFrame* frame = new MainFrame(NULL,
+    // Fill in the application information fields before creating wxConfig.
+    SetVendorName(wxT("CanBee"));
+    SetAppName(wxT("oxygine2d-editor"));
+    SetAppDisplayName(wxT("Oxygine Scene editor"));
+
+	//Splash screen
+	wxBitmap bitmap;
+	if (bitmap.LoadFile("splash.png", wxBITMAP_TYPE_PNG))
+	{
+		wxSplashScreen* splash = new wxSplashScreen(bitmap,
+			wxSPLASH_CENTRE_ON_SCREEN|wxSPLASH_TIMEOUT,
+			4000, NULL, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+			wxBORDER_SIMPLE|wxSTAY_ON_TOP);
+	}
+    wxYield();
+
+	wxFrame* frame = new MainFrame(NULL,
                                  wxID_ANY,
-                                 wxT("wxAUI Sample Application"),
+                                 GetAppDisplayName(),
                                  wxDefaultPosition,
                                  wxSize(800, 600));
-	
-	//while (!splash->timeUp) {
-		sleep(5);
-	//}
-	splash->Destroy();
-    frame->Show();
+
+	/*
+    SplashScreen * splash = new SplashScreen(bitmap, 8, 0, -1, wxNO_BORDER | wxFRAME_SHAPED);
+	std::cout << "* Splash Screen created" << std::endl;
+	*/
+
+	sleep(3);
+    frame->Show(true);
 
     return true;
 }
