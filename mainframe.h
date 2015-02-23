@@ -12,6 +12,8 @@ class wxSizeReportCtrl;
 class Scene;
 class MainFrame;
 
+class wxFileHistory;
+
 class CoreTraits
 {
 public:
@@ -136,6 +138,7 @@ public:
     void OnNotebookPageClosed(wxAuiNotebookEvent& evt);
     void OnNotebookPageChanged(wxAuiNotebookEvent& evt);
     void OnNew(wxCommandEvent& evt);
+    void OnOpen(wxCommandEvent& evt);
     void OnExit(wxCommandEvent& evt);
     void OnAbout(wxCommandEvent& evt);
     void OnTabAlignment(wxCommandEvent &evt);
@@ -151,6 +154,7 @@ public:
 private:
 
     wxAuiManager m_mgr;
+	wxFileHistory* mFileHistory;
     wxArrayString m_perspectives;
     wxMenu* m_perspectives_menu;
     long m_notebook_theme;

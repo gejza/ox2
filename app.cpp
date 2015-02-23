@@ -18,6 +18,8 @@ bool MyApp::OnInit()
     SetAppName(wxT("oxygine2d-editor"));
     SetAppDisplayName(wxT("Oxygine Scene editor"));
 
+	wxConfigBase *pConfig = wxConfigBase::Get();
+	pConfig->SetRecordDefaults();
 	//Splash screen
 	wxBitmap bitmap;
 	if (bitmap.LoadFile("splash.png", wxBITMAP_TYPE_PNG))
@@ -45,4 +47,15 @@ bool MyApp::OnInit()
 
     return true;
 }
+
+int MyApp::OnExit()
+{
+    // clean up: Set() returns the active config object as Get() does, but unlike
+    // Get() it doesn't try to create one if there is none (definitely not what
+    // we want here!)
+    delete wxConfigBase::Set((wxConfigBase *) NULL);
+
+    return 0;
+}
+
 

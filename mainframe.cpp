@@ -30,6 +30,7 @@
 #include "wx/statusbr.h"
 #include "wx/msgdlg.h"
 #include "wx/textdlg.h"
+#include <wx/filehistory.h>
 
 #include "sample.xpm"
 
@@ -546,6 +547,7 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(ID_Settings, MainFrame::OnSettings)
     EVT_MENU(ID_CustomizeToolbar, MainFrame::OnCustomizeToolbar)
     EVT_MENU(wxID_NEW, MainFrame::OnNew)
+    EVT_MENU(wxID_OPEN, MainFrame::OnOpen)
     EVT_MENU(wxID_EXIT, MainFrame::OnExit)
     EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
     EVT_UPDATE_UI(ID_NotebookTabFixedWidth, MainFrame::OnUpdateUI)
@@ -606,9 +608,15 @@ MainFrame::MainFrame(wxWindow* parent,
     wxMenu* file_menu = new wxMenu;
     file_menu->Append(wxID_NEW);
     file_menu->Append(wxID_OPEN);
+	wxMenu* recent_menu = new wxMenu;
+	file_menu->AppendSubMenu(recent_menu, _T("Open Recent"));
+	file_menu->AppendSeparator();
     file_menu->Append(wxID_SAVE);
     file_menu->Append(wxID_SAVEAS);
+	file_menu->AppendSeparator();
     file_menu->Append(wxID_EXIT);
+
+	
 
     wxMenu* view_menu = new wxMenu;
     view_menu->Append(ID_CreateText, _("Create Text Control"));
@@ -931,6 +939,10 @@ MainFrame::MainFrame(wxWindow* parent,
 
    CoreTraits::get(this)->GetNotebook()->Thaw();
 
+	mFileHistory = new wxFileHistory(10);
+	mFileHistory->UseMenu(recent_menu);
+	mFileHistory->AddFilesToMenu(recent_menu);
+	mFileHistory->Load(*wxConfigBase::Get());
 
     // "commit" all changes made to wxAuiManager
     m_mgr.Update();
@@ -940,6 +952,7 @@ MainFrame::MainFrame(wxWindow* parent,
 
 MainFrame::~MainFrame()
 {
+	mFileHistory->Save(*wxConfigBase::Get());
     m_mgr.UnInit();
 }
 
@@ -1465,6 +1478,22 @@ void MainFrame::OnNew(wxCommandEvent& WXUNUSED(event))
    //return ctrl;
 }
 
+void MainFrame::OnOpen(wxCommandEvent& WXUNUSED(event))
+{
+	wxFileDialog dlg(this, wxT("Open file"), wxEmptyString, wxEmptyString, wxT("Any file (*)|*"),
+			                      wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_CHANGE_DIR);
+	if (dlg.ShowModal() != wxID_OK) return;
+
+	wxAuiNotebook* ctrl = CoreTraits::get(this)->GetNotebook();
+	Scene* scene = new Scene(ctrl, this);
+	scene->Load(dlg.GetPath());
+	ctrl->AddPage(scene, dlg.GetFilename(), true);
+   	ctrl->SetPageToolTip(0, "Welcome to wxAUI (this is a page tooltip)");
+	CoreTraits::get(this)->SetActiveScene(scene);
+	mFileHistory->AddFileToHistory(dlg.GetPath());
+   //ctrl->Thaw();
+   //return ctrl;
+}
 
 void MainFrame::OnExit(wxCommandEvent& WXUNUSED(event))
 {
