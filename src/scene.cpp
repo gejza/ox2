@@ -127,7 +127,7 @@ Scene::Scene(wxWindow *parent, MainFrame* owner)
 	m_root.Add(new NodeImage(wxPoint(250,100), "logo.png"));
 	this->Save(wxT("scene.xml"));
 	*/
-	this->Load(wxT("scene.xml"));
+	//this->Load(wxT("scene.xml"));
 
 }
 

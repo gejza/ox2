@@ -50,7 +50,7 @@ bool MyApp::OnInit()
 	pConfig->SetRecordDefaults();
 	//Splash screen
 	wxBitmap bitmap;
-	if (bitmap.LoadFile("splash.png", wxBITMAP_TYPE_PNG))
+	if (bitmap.LoadFile("res/splash.png", wxBITMAP_TYPE_PNG))
 	{
 		wxSplashScreen* splash = new wxSplashScreen(bitmap,
 			wxSPLASH_CENTRE_ON_SCREEN|wxSPLASH_TIMEOUT,

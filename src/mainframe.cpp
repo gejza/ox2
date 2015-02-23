@@ -706,8 +706,8 @@ MainFrame::MainFrame(wxWindow* parent,
 	wxRect rect;
 	status->GetFieldRect(1, rect);
 	m_slider = new wxSlider(GetStatusBar(), ID_Slider, 100, 10, 400,
-		                             rect.GetTopLeft(), rect.GetSize());
-									                              //wxSL_LABELS);
+		                             rect.GetTopLeft(), rect.GetSize(),
+									    wxSL_VALUE_LABEL|wxSL_AUTOTICKS|wxSL_RIGHT);
 
 
     // min size for the frame itself isn't completely done.
