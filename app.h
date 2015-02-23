@@ -6,8 +6,13 @@
 class MyApp : public wxApp
 {
 public:
-    bool OnInit();
-	int OnExit();
+    virtual bool OnInit();
+	virtual int OnExit();
+
+	virtual void OnInitCmdLine(wxCmdLineParser& parser);
+	virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
+private:
+	wxString m_file2open;
 };
 
 DECLARE_APP(MyApp)

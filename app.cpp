@@ -1,9 +1,37 @@
 #include "app.h"
 #include "mainframe.h"
 #include <wx/splash.h>
+#include <wx/cmdline.h>
 
 IMPLEMENT_APP(MyApp)
 
+void MyApp::OnInitCmdLine(wxCmdLineParser& parser)
+{
+    wxApp::OnInitCmdLine(parser);
+	parser.AddParam("File to open", wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL);
+//    parser.AddSwitch("v", "verbose",
+//                     "run in MDI mode: multiple documents, single window");
+//    parser.AddSwitch("", "sdi",
+//                     "run in SDI mode: multiple documents, multiple windows");
+//    parser.AddSwitch("", "single",
+ //                    "run in single document mode");
+}
+
+bool MyApp::OnCmdLineParsed(wxCmdLineParser& parser)
+{
+	if ( !wxApp::OnCmdLineParsed(parser))
+		return false;
+
+	if ( parser.GetParamCount() )
+		m_file2open = parser.GetParam(0);
+  //  int numModeOptions = 0;
+   // if ( parser.Found("verbose") )
+   // {
+        //m_mode = Mode_SDI;
+        //numModeOptions++;
+    //}
+	return true;
+}
 
 bool MyApp::OnInit()
 {
@@ -31,7 +59,8 @@ bool MyApp::OnInit()
 	}
     wxYield();
 
-	wxFrame* frame = new MainFrame(NULL,
+	wxLogVerbose("Verbose logging enabled!");
+	MainFrame* frame = new MainFrame(NULL,
                                  wxID_ANY,
                                  GetAppDisplayName(),
                                  wxDefaultPosition,
@@ -45,6 +74,9 @@ bool MyApp::OnInit()
 	sleep(3);
     frame->Show(true);
 
+	if (m_file2open != "") {
+		frame->OpenFile(m_file2open);
+	}
     return true;
 }
 

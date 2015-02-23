@@ -109,6 +109,7 @@ public:
     wxAuiDockArt* GetDockArt();
     void DoUpdate();
 
+	void OpenFile(const wxString& filename);
 //private:
     wxTextCtrl* CreateTextCtrl(const wxString& text = wxEmptyString);
     wxSizeReportCtrl* CreateSizeReportCtrl(int width = 80, int height = 80);
@@ -151,6 +152,7 @@ public:
 
     void OnPaneClose(wxAuiManagerEvent& evt);
 	void OnTreeItemChanged(wxTreeEvent& event);
+
 private:
 
     wxAuiManager m_mgr;

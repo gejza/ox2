@@ -1478,18 +1478,22 @@ void MainFrame::OnNew(wxCommandEvent& WXUNUSED(event))
    //return ctrl;
 }
 
+void MainFrame::OpenFile(const wxString& path) {
+
+	wxAuiNotebook* ctrl = CoreTraits::get(this)->GetNotebook();
+	Scene* scene = new Scene(ctrl, this);
+	scene->Load(path);
+	ctrl->AddPage(scene, wxFileNameFromPath(path), true);
+   	ctrl->SetPageToolTip(0, "Welcome to wxAUI (this is a page tooltip)");
+	CoreTraits::get(this)->SetActiveScene(scene);
+}
+
 void MainFrame::OnOpen(wxCommandEvent& WXUNUSED(event))
 {
 	wxFileDialog dlg(this, wxT("Open file"), wxEmptyString, wxEmptyString, wxT("Any file (*)|*"),
 			                      wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_CHANGE_DIR);
 	if (dlg.ShowModal() != wxID_OK) return;
-
-	wxAuiNotebook* ctrl = CoreTraits::get(this)->GetNotebook();
-	Scene* scene = new Scene(ctrl, this);
-	scene->Load(dlg.GetPath());
-	ctrl->AddPage(scene, dlg.GetFilename(), true);
-   	ctrl->SetPageToolTip(0, "Welcome to wxAUI (this is a page tooltip)");
-	CoreTraits::get(this)->SetActiveScene(scene);
+	this->OpenFile(dlg.GetPath());
 	mFileHistory->AddFileToHistory(dlg.GetPath());
    //ctrl->Thaw();
    //return ctrl;
