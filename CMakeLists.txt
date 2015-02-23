@@ -3,6 +3,7 @@ cmake_minimum_required (VERSION 2.6)
 project (SceneEditor)
 
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} cmake)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY})
 
 message("----------- trying to find JsonCpp-------------")
 find_package(JsonCpp)
@@ -33,14 +34,10 @@ if(wxWidgets_FOUND)
 	ELSE(WIN32)
 		add_definitions(-D_LINUX=1)
 	ENDIF(WIN32)
-	add_executable(SceneEditor WIN32
-		mainframe.cpp mainframe.h
-		app.h app.cpp
-		scene.cpp scene.h
-		node.h node.cpp
-		)
-	target_link_libraries(SceneEditor ${wxWidgets_LIBRARIES} ${JSONCPP_LIBRARY})
-
 else()
 	MESSAGE("wxWidgets not found!")
 endif()
+
+add_subdirectory(src)
+
+

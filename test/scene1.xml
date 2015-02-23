@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+  <image x="30" y="30" path="credits.png"/>
+  <image x="250" y="100" path="play.png"/>
+</list>

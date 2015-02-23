@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+  <circle x="100" y="100" radius="20"/>
+  <circle x="200" y="100" radius="30"/>
+  <circle x="300" y="100" radius="40"/>
+</list>

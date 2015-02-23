@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+  <image x="30" y="30" path="credits.png"/>
+  <circle x="100" y="100" radius="20"/>
+  <circle x="200" y="100" radius="30"/>
+  <circle x="300" y="100" radius="40"/>
+  <image x="250" y="100" path="play.png"/>
+  <circle x="250" y="100" radius="22"/>
+</list>
