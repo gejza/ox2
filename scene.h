@@ -80,6 +80,7 @@ public:
 		}
 		Refresh();
 	}
+	void SetZoom(float zoom);
 protected:
     enum DrawMode
     {

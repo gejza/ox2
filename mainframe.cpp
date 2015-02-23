@@ -550,6 +550,8 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(wxID_OPEN, MainFrame::OnOpen)
     EVT_MENU(wxID_EXIT, MainFrame::OnExit)
     EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
+    EVT_MENU(wxID_UNDO, MainFrame::OnUndo)
+    EVT_MENU(wxID_REDO, MainFrame::OnRedo)
     EVT_UPDATE_UI(ID_NotebookTabFixedWidth, MainFrame::OnUpdateUI)
     EVT_UPDATE_UI(ID_NotebookNoCloseButton, MainFrame::OnUpdateUI)
     EVT_UPDATE_UI(ID_NotebookCloseButton, MainFrame::OnUpdateUI)
@@ -581,7 +583,8 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainFrame::OnNotebookPageClose)
     EVT_AUINOTEBOOK_PAGE_CLOSED(wxID_ANY, MainFrame::OnNotebookPageClosed)
 	EVT_AUINOTEBOOK_PAGE_CHANGED(wxID_ANY, MainFrame::OnNotebookPageChanged)
-    EVT_TREE_SEL_CHANGED(CoreTraits::ID_TreeCtrl, MainFrame::OnTreeItemChanged)
+    EVT_COMMAND_SCROLL_CHANGED(ID_Slider, MainFrame::OnSlider)
+	EVT_TREE_SEL_CHANGED(CoreTraits::ID_TreeCtrl, MainFrame::OnTreeItemChanged)
 wxEND_EVENT_TABLE()
 
 
@@ -617,8 +620,13 @@ MainFrame::MainFrame(wxWindow* parent,
     file_menu->Append(wxID_EXIT);
 
 	
+    wxMenu* edit_menu = new wxMenu;
+    m_undo = edit_menu->Append(wxID_UNDO);
+    m_redo = edit_menu->Append(wxID_REDO);
+	CoreTraits::get()->GetCmds()->SetEditMenu(edit_menu);
 
     wxMenu* view_menu = new wxMenu;
+	view_menu->AppendSeparator();
     view_menu->Append(ID_CreateText, _("Create Text Control"));
     view_menu->Append(ID_CreateTree, _("Create Tree"));
     view_menu->Append(ID_CreateGrid, _("Create Grid"));
@@ -693,6 +701,13 @@ MainFrame::MainFrame(wxWindow* parent,
 
     CreateStatusBar();
     GetStatusBar()->SetStatusText(_("Ready"));
+	wxStatusBar * status = GetStatusBar();
+	status->SetFieldsCount(2);
+	wxRect rect;
+	status->GetFieldRect(1, rect);
+	m_slider = new wxSlider(GetStatusBar(), ID_Slider, 100, 10, 400,
+		                             rect.GetTopLeft(), rect.GetSize());
+									                              //wxSL_LABELS);
 
 
     // min size for the frame itself isn't completely done.
@@ -947,6 +962,7 @@ MainFrame::MainFrame(wxWindow* parent,
     // "commit" all changes made to wxAuiManager
     m_mgr.Update();
 	CoreTraits::get(this)->SetActiveScene(scene);
+	UpdateControls();
 }
 
 
@@ -1504,6 +1520,22 @@ void MainFrame::OnExit(wxCommandEvent& WXUNUSED(event))
     Close(true);
 }
 
+void MainFrame::UpdateControls()
+{
+	//m_undo->Enable(CoreTraits::get()->GetCmds()->CanUndo());
+	//m_redo->Enable(CoreTraits::get()->GetCmds()->CanRedo());
+}
+
+void MainFrame::OnUndo(wxCommandEvent& WXUNUSED(event))
+{
+	CoreTraits::get()->GetCmds()->Undo();
+}
+
+void MainFrame::OnRedo(wxCommandEvent& WXUNUSED(event))
+{
+	CoreTraits::get()->GetCmds()->Redo();
+}
+
 void MainFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
     wxMessageBox(_("wxAUI Demo\nAn advanced window management library for wxWidgets\n(c) Copyright 2005-2006, Kirix Corporation"), _("About wxAUI Demo"), wxOK, this);
@@ -1534,6 +1566,7 @@ void MainFrame::OnTreeItemChanged(wxTreeEvent& event)
 	if (n && CoreTraits::get()->GetScene()) {
 		CoreTraits::get()->GetScene()->select(n->get());
 	}
+	//CoreTraits::Get()->GetCmds()->Sub();
 }
 
 wxSizeReportCtrl* MainFrame::CreateSizeReportCtrl(int width, int height)
@@ -1616,6 +1649,15 @@ wxSizeReportCtrl* MainFrame::CreateSizeReportCtrl(int width, int height)
    ctrl->AddPage( new wxTextCtrl( ctrl, wxID_ANY, wxT("Some more text"),
                 wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxNO_BORDER) , wxT("wxTextCtrl 8") );
 	*/
+
+void MainFrame::OnSlider(wxScrollEvent& event)
+{
+    wxASSERT_MSG( event.GetInt() == m_slider->GetValue(),
+                  wxT("slider value should be the same") );
+
+	CoreTraits::get()->GetScene()->SetZoom(event.GetInt() / 100.f);
+
+}
 
 
 wxString MainFrame::GetIntroText()

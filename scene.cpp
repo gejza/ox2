@@ -1303,6 +1303,12 @@ void Scene::Draw(wxDC& pdc)
 	*/
 }
 
+void Scene::SetZoom(float zoom)
+{
+	m_scale = zoom;
+	Refresh();
+}
+
 void Scene::OnMouseMove(wxMouseEvent &event)
 {
 #if wxUSE_STATUSBAR

@@ -6,6 +6,8 @@
 #include "wx/wxhtml.h"
 #include <wx/propgrid/propgrid.h>
 
+#include <wx/cmdproc.h>
+
 // -- frame --
 class wxSizeReportCtrl;
 
@@ -13,7 +15,7 @@ class Scene;
 class MainFrame;
 
 class wxFileHistory;
-
+class wxSlider;
 class CoreTraits
 {
 public:
@@ -21,6 +23,9 @@ public:
 	wxTreeCtrl* GetTreeCtrl();
     wxPropertyGrid* GetPropGrid();
     wxAuiNotebook* GetNotebook();
+	wxCommandProcessor* GetCmds() {
+		return &_cmds;
+	}
 	void SetActiveScene(Scene* scene);
 	Scene* GetScene() {
 		return _current;
@@ -38,6 +43,7 @@ private:
 	wxPropertyGrid* _prop_grid;
 	wxAuiNotebook* _tabs;
 	Scene* _current;
+	wxCommandProcessor _cmds;
 };
 
 class MainFrame : public wxFrame
@@ -89,7 +95,7 @@ class MainFrame : public wxFrame
         ID_NotebookArtSimple,
         ID_NotebookAlignTop,
         ID_NotebookAlignBottom,
-
+		ID_Slider,
 
         ID_SampleItem,
 
@@ -142,6 +148,8 @@ public:
     void OnOpen(wxCommandEvent& evt);
     void OnExit(wxCommandEvent& evt);
     void OnAbout(wxCommandEvent& evt);
+    void OnRedo(wxCommandEvent& evt);
+    void OnUndo(wxCommandEvent& evt);
     void OnTabAlignment(wxCommandEvent &evt);
 
     void OnGradient(wxCommandEvent& evt);
@@ -153,6 +161,8 @@ public:
     void OnPaneClose(wxAuiManagerEvent& evt);
 	void OnTreeItemChanged(wxTreeEvent& event);
 
+	void UpdateControls();
+	void OnSlider(wxScrollEvent& event);
 private:
 
     wxAuiManager m_mgr;
@@ -160,7 +170,9 @@ private:
     wxArrayString m_perspectives;
     wxMenu* m_perspectives_menu;
     long m_notebook_theme;
-
+	wxSlider* m_slider;
+	wxMenuItem* m_undo;
+	wxMenuItem* m_redo;
     wxDECLARE_EVENT_TABLE();
 };
 
