@@ -491,6 +491,8 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_AUINOTEBOOK_ALLOW_DND(wxID_ANY, MainFrame::OnAllowNotebookDnD)
     EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainFrame::OnNotebookPageClose)
     EVT_AUINOTEBOOK_PAGE_CLOSED(wxID_ANY, MainFrame::OnNotebookPageClosed)
+	EVT_AUINOTEBOOK_PAGE_CHANGED(wxID_ANY, MainFrame::OnNotebookPageChanged)
+    EVT_TREE_SEL_CHANGED(ID_TreeCtrl, MainFrame::OnTreeItemChanged)
 wxEND_EVENT_TABLE()
 
 
@@ -745,7 +747,7 @@ MainFrame::MainFrame(wxWindow* parent,
     m_mgr.AddPane(_tree = CreateTreeCtrl(), wxAuiPaneInfo().
                   Name(wxT("test8")).Caption(wxT("Tree Pane")).
                   Left().Layer(1).Position(1).
-                  CloseButton(true).MaximizeButton(true));
+                  CloseButton(true).MinimizeButton(true));
 
     m_mgr.AddPane(CreateSizeReportCtrl(), wxAuiPaneInfo().
                   Name(wxT("test9")).Caption(wxT("Min Size 200x100")).
@@ -1132,6 +1134,8 @@ void MainFrame::OnUpdateUI(wxUpdateUIEvent& event)
     }
 }
 
+static wxTreeCtrl* g_ctrl = 0;
+
 void MainFrame::OnPaneClose(wxAuiManagerEvent& evt)
 {
     if (evt.pane->name == wxT("test10"))
@@ -1208,6 +1212,16 @@ void MainFrame::OnNotebookPageClosed(wxAuiNotebookEvent& evt)
     evt.Skip();
 }
 
+void MainFrame::OnNotebookPageChanged(wxAuiNotebookEvent& evt)
+{
+    wxAuiNotebook* ctrl = (wxAuiNotebook*)evt.GetEventObject();
+	wxWindow* sel = ctrl->GetCurrentPage();
+	Scene* s = dynamic_cast<Scene*>(sel);
+	if (s) {
+		s->UpdateTree(g_ctrl);
+	}
+}
+
 void MainFrame::OnAllowNotebookDnD(wxAuiNotebookEvent& evt)
 {
     // for the purpose of this test application, explicitly
@@ -1225,11 +1239,14 @@ wxPoint MainFrame::GetStartPosition()
 
 void MainFrame::OnCreateTree(wxCommandEvent& WXUNUSED(event))
 {
+	/*
     m_mgr.AddPane(CreateTreeCtrl(), wxAuiPaneInfo().
                   Caption(wxT("Tree Control")).
                   Float().FloatingPosition(GetStartPosition()).
                   FloatingSize(wxSize(150,300)));
-    m_mgr.Update();
+    */
+	m_mgr.GetPane(g_ctrl).Show();
+	m_mgr.Update();
 }
 
 void MainFrame::OnCreateGrid(wxCommandEvent& WXUNUSED(event))
@@ -1397,9 +1414,10 @@ wxPropertyGrid* MainFrame::CreatePropGrid()
     return pg;
 }
 
+
 wxTreeCtrl* MainFrame::CreateTreeCtrl()
 {
-    wxTreeCtrl* tree = new wxTreeCtrl(this, wxID_ANY,
+    wxTreeCtrl* tree = new wxTreeCtrl(this, ID_TreeCtrl,
                                       wxPoint(0,0), wxSize(160,250),
                                       wxTR_DEFAULT_STYLE | wxNO_BORDER);
 
@@ -1408,33 +1426,17 @@ wxTreeCtrl* MainFrame::CreateTreeCtrl()
     imglist->Add(wxArtProvider::GetBitmap(wxART_NORMAL_FILE, wxART_OTHER, wxSize(16,16)));
     tree->AssignImageList(imglist);
 
-    wxTreeItemId root = tree->AddRoot(wxT("wxAUI Project"), 0);
-    wxArrayTreeItemIds items;
+    return g_ctrl = tree;
+}
 
-
-
-    items.Add(tree->AppendItem(root, wxT("Item 1"), 0));
-    items.Add(tree->AppendItem(root, wxT("Item 2"), 0));
-    items.Add(tree->AppendItem(root, wxT("Item 3"), 0));
-    items.Add(tree->AppendItem(root, wxT("Item 4"), 0));
-    items.Add(tree->AppendItem(root, wxT("Item 5"), 0));
-
-
-    int i, count;
-    for (i = 0, count = items.Count(); i < count; ++i)
-    {
-        wxTreeItemId id = items.Item(i);
-        tree->AppendItem(id, wxT("Subitem 1"), 1);
-        tree->AppendItem(id, wxT("Subitem 2"), 1);
-        tree->AppendItem(id, wxT("Subitem 3"), 1);
-        tree->AppendItem(id, wxT("Subitem 4"), 1);
-        tree->AppendItem(id, wxT("Subitem 5"), 1);
-    }
-
-
-    tree->Expand(root);
-
-    return tree;
+void MainFrame::OnTreeItemChanged(wxTreeEvent& event)
+{
+	printf("Changed\n");
+	wxTreeItemData* d = g_ctrl->GetItemData(event.GetItem());
+	TreeNodePtr* n = dynamic_cast<TreeNodePtr*>(d);
+	if (n) {
+		_scene->select(n->get());
+	}
 }
 
 wxSizeReportCtrl* MainFrame::CreateSizeReportCtrl(int width, int height)

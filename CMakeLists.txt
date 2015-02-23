@@ -37,7 +37,7 @@ if(wxWidgets_FOUND)
 		mainframe.cpp mainframe.h
 		app.h app.cpp
 		scene.cpp scene.h
-		node.h node.cpp
+		node.h node.cpp SplashScreen.h SplashScreen.cpp
 		)
 	target_link_libraries(SceneEditor ${wxWidgets_LIBRARIES} ${JSONCPP_LIBRARY})
 

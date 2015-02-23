@@ -61,6 +61,8 @@ class MainFrame : public wxFrame
         ID_NotebookAlignTop,
         ID_NotebookAlignBottom,
 
+		ID_TreeCtrl,
+
         ID_SampleItem,
 
         ID_FirstPerspective = ID_CreatePerspective+1000
@@ -109,6 +111,7 @@ public:
     void OnAllowNotebookDnD(wxAuiNotebookEvent& evt);
     void OnNotebookPageClose(wxAuiNotebookEvent& evt);
     void OnNotebookPageClosed(wxAuiNotebookEvent& evt);
+    void OnNotebookPageChanged(wxAuiNotebookEvent& evt);
     void OnExit(wxCommandEvent& evt);
     void OnAbout(wxCommandEvent& evt);
     void OnTabAlignment(wxCommandEvent &evt);
@@ -120,7 +123,7 @@ public:
     void OnUpdateUI(wxUpdateUIEvent& evt);
 
     void OnPaneClose(wxAuiManagerEvent& evt);
-
+	void OnTreeItemChanged(wxTreeEvent& event);
 private:
 
     wxAuiManager m_mgr;

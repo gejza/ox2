@@ -1,6 +1,7 @@
 #include "node.h"
 #include <wx/xml/xml.h>
 #include <sstream>
+#include <wx/treectrl.h>
 
 class HP_t
 {
@@ -39,18 +40,26 @@ Node* Node::create(wxXmlNode* node2)
 	return new NodeList();
 }
 
-#include <wx/treectrl.h>
+wxTreeCtrl* g_ctrl = 0;
 
+void Node::select(bool selected) {
+	_selected = selected;
+	if (_selected && _tree_id.IsOk()) {
+		g_ctrl->SelectItem(_tree_id, true);
+	}
+
+}
 void Node::tree(wxTreeCtrl* ctrl, const wxTreeItemId &parent)
 {
-	ctrl->AppendItem(parent, this->ClassName());
+	g_ctrl = ctrl;
+	_tree_id = ctrl->AppendItem(parent, this->ClassName(), -1, -1, new TreeNodePtr(this));
 }
 
 void NodeList::tree(wxTreeCtrl* ctrl, const wxTreeItemId &parent)
 {
-	wxTreeItemId id = ctrl->AddRoot("Scene");
+	_tree_id = ctrl->AddRoot("Scene", -1, -1,  new TreeNodePtr(this));
 	for (list_type::iterator i=_child.begin();i != _child.end();++i) {
-		(*i)->tree(ctrl, id);
+		(*i)->tree(ctrl, _tree_id);
 	}
 
 }

@@ -4,7 +4,8 @@
 #include <wx/dcgraph.h>
 #include <wx/graphics.h>
 #include <wx/overlay.h>
-
+#include <wx/treebase.h>
+#include <wx/treectrl.h>
 
 #include <vector>
 
@@ -23,12 +24,27 @@ public:
 	virtual void tree(wxTreeCtrl* ctrl, const wxTreeItemId &parent);
 	virtual const char* ClassName() const = 0;
 	virtual Node* find(int x, int y) = 0;
-	virtual void select(bool selected) {
-		_selected = selected;
-	}
+	virtual void select(bool selected);
 protected:
+	wxTreeItemId _tree_id;
 	bool _selected;
 };
+
+
+class TreeNodePtr : public wxTreeItemData
+{
+public:
+	TreeNodePtr(Node* node) : _node(node) {}
+	~TreeNodePtr() {
+		printf("Destroy %s\n", _node->ClassName());
+	}
+	Node* get() {
+		return _node;
+	}
+private:
+	Node* _node;
+};
+
 
 class NodeList : public Node
 {
