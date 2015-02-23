@@ -2,6 +2,8 @@
 #include <wx/xml/xml.h>
 #include <sstream>
 #include <wx/treectrl.h>
+#include <wx/propgrid/propgrid.h>
+#include "mainframe.h"
 
 class HP_t
 {
@@ -40,18 +42,33 @@ Node* Node::create(wxXmlNode* node2)
 	return new NodeList();
 }
 
-wxTreeCtrl* g_ctrl = 0;
 
 void Node::select(bool selected) {
 	_selected = selected;
 	if (_selected && _tree_id.IsOk()) {
-		g_ctrl->SelectItem(_tree_id, true);
+		CoreTraits::get()->GetTreeCtrl()->SelectItem(_tree_id, true);
+
+		wxPropertyGrid* pg = CoreTraits::get()->GetPropGrid();
+		pg->Clear();
+		pg->Append(new wxStringProperty("Name", wxPG_LABEL, wxString(this->ClassName())));
+		// One way to add category (similar to how other properties are added)
+		/*_prop_grid->Append(new wxPropertyCategory("Main"));
+		// All these are added to "Main" category
+		_prop_grid->Append(new wxIntProperty("Age", wxPG_LABEL, 25));
+		_prop_grid->Append(new wxIntProperty("Height", wxPG_LABEL, 180));
+		_prop_grid->Append(new wxIntProperty("Weight"));
+		// Another one
+		_prop_grid->Append(new wxPropertyCategory("Attributes"));
+		// All these are added to "Attributes" category
+		_prop_grid->Append(new wxIntProperty("Intelligence"));
+		_prop_grid->Append(new wxIntProperty("Agility"));
+		_prop_grid->Append(new wxIntProperty("Strength"));
+	*/
 	}
 
 }
 void Node::tree(wxTreeCtrl* ctrl, const wxTreeItemId &parent)
 {
-	g_ctrl = ctrl;
 	_tree_id = ctrl->AppendItem(parent, this->ClassName(), -1, -1, new TreeNodePtr(this));
 }
 

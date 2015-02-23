@@ -10,12 +10,39 @@
 class wxSizeReportCtrl;
 
 class Scene;
+class MainFrame;
+
+class CoreTraits
+{
+public:
+	static CoreTraits* get(MainFrame* main = NULL);
+	wxTreeCtrl* GetTreeCtrl();
+    wxPropertyGrid* GetPropGrid();
+    wxAuiNotebook* GetNotebook();
+	void SetActiveScene(Scene* scene);
+	Scene* GetScene() {
+		return _current;
+	}
+
+	enum {
+		ID_TreeCtrl = wxID_HIGHEST+1,
+		ID_Max,
+	};
+private:
+	CoreTraits(MainFrame* main);
+	static CoreTraits* _this;
+	MainFrame* _main;
+	wxTreeCtrl* _tree_ctrl;
+	wxPropertyGrid* _prop_grid;
+	wxAuiNotebook* _tabs;
+	Scene* _current;
+};
 
 class MainFrame : public wxFrame
 {
     enum
     {
-        ID_CreateTree = wxID_HIGHEST+1,
+        ID_CreateTree = CoreTraits::ID_Max,
         ID_CreateGrid,
         ID_CreateText,
         ID_CreateHTML,
@@ -61,7 +88,6 @@ class MainFrame : public wxFrame
         ID_NotebookAlignTop,
         ID_NotebookAlignBottom,
 
-		ID_TreeCtrl,
 
         ID_SampleItem,
 
@@ -83,12 +109,9 @@ public:
 
 //private:
     wxTextCtrl* CreateTextCtrl(const wxString& text = wxEmptyString);
-    wxPropertyGrid* CreatePropGrid();
-    wxTreeCtrl* CreateTreeCtrl();
     wxSizeReportCtrl* CreateSizeReportCtrl(int width = 80, int height = 80);
     wxPoint GetStartPosition();
     //wxHtmlWindow* CreateHTMLCtrl(wxWindow* parent = NULL);
-    wxAuiNotebook* CreateNotebook();
 
     wxString GetIntroText();
 
@@ -112,6 +135,7 @@ public:
     void OnNotebookPageClose(wxAuiNotebookEvent& evt);
     void OnNotebookPageClosed(wxAuiNotebookEvent& evt);
     void OnNotebookPageChanged(wxAuiNotebookEvent& evt);
+    void OnNew(wxCommandEvent& evt);
     void OnExit(wxCommandEvent& evt);
     void OnAbout(wxCommandEvent& evt);
     void OnTabAlignment(wxCommandEvent &evt);
@@ -119,7 +143,7 @@ public:
     void OnGradient(wxCommandEvent& evt);
     void OnToolbarResizing(wxCommandEvent& evt);
     void OnManagerFlag(wxCommandEvent& evt);
-    void OnNotebookFlag(wxCommandEvent& evt);
+    //void OnNotebookFlag(wxCommandEvent& evt);
     void OnUpdateUI(wxUpdateUIEvent& evt);
 
     void OnPaneClose(wxAuiManagerEvent& evt);
@@ -129,9 +153,7 @@ private:
     wxAuiManager m_mgr;
     wxArrayString m_perspectives;
     wxMenu* m_perspectives_menu;
-    long m_notebook_style;
     long m_notebook_theme;
-	Scene* _scene;
 
     wxDECLARE_EVENT_TABLE();
 };

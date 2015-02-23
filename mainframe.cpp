@@ -36,6 +36,92 @@
 #include "scene.h"
 #include "mainframe.h"
 
+CoreTraits* CoreTraits::_this = NULL;
+
+CoreTraits* CoreTraits::get(MainFrame* main)
+{
+	if (_this == NULL) {
+		wxASSERT(main != NULL);
+		_this = new CoreTraits(main);
+	}
+	return _this;
+}
+   	
+CoreTraits::CoreTraits(MainFrame* main)
+: _main(main), _tree_ctrl(0), _prop_grid(0), _tabs(0), _current(0) {
+	_this = this;
+}
+
+void CoreTraits::SetActiveScene(Scene* scene)
+{
+	_current = scene;
+	if (_current) {
+		_current->UpdateTree(this->GetTreeCtrl());
+	}
+}
+
+wxTreeCtrl* CoreTraits::GetTreeCtrl()
+{
+	if (!_tree_ctrl) {
+		wxASSERT(_main != NULL);
+		_tree_ctrl = new wxTreeCtrl(_main, ID_TreeCtrl,
+										  wxPoint(0,0), wxSize(160,250),
+										  wxTR_DEFAULT_STYLE | wxNO_BORDER);
+
+		wxImageList* imglist = new wxImageList(16, 16, true, 2);
+		imglist->Add(wxArtProvider::GetBitmap(wxART_FOLDER, wxART_OTHER, wxSize(16,16)));
+		imglist->Add(wxArtProvider::GetBitmap(wxART_NORMAL_FILE, wxART_OTHER, wxSize(16,16)));
+		_tree_ctrl->AssignImageList(imglist);
+	}
+	return _tree_ctrl;
+}
+
+wxPropertyGrid* CoreTraits::GetPropGrid()
+{
+	if (!_prop_grid) {
+		// Construct wxPropertyGrid control
+		wxASSERT(_main != NULL);
+		_prop_grid = new wxPropertyGrid(
+			_main, // parent
+			wxID_ANY, // id
+			wxDefaultPosition, // position
+			wxSize(150, 250), // size
+			// Here are just some of the supported window styles
+			wxPG_AUTO_SORT | // Automatic sorting after items added
+			wxPG_SPLITTER_AUTO_CENTER | // Automatically center splitter until user manually adjusts it
+			// Default style
+			wxPG_DEFAULT_STYLE | wxNO_BORDER | wxWANTS_CHARS);
+		// Window style flags are at premium, so some less often needed ones are
+		// available as extra window styles (wxPG_EX_xxx) which must be set using
+		// SetExtraStyle member function. wxPG_EX_HELP_AS_TOOLTIPS, for instance,
+		// allows displaying help strings as tool tips.
+		_prop_grid->SetExtraStyle(wxPG_EX_HELP_AS_TOOLTIPS);
+		}
+		return _prop_grid;
+}
+
+wxAuiNotebook* CoreTraits::GetNotebook()
+{
+	if (!_tabs) {
+    	long m_notebook_style;
+    // set up default notebook style
+    m_notebook_style = wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxNO_BORDER;
+    long m_notebook_theme = 0;
+
+		wxASSERT(_main != NULL);
+	   // create the notebook off-window to avoid flicker
+	   wxSize client_size = _main->GetClientSize();
+
+	   _tabs = new wxAuiNotebook(_main, wxID_ANY,
+										wxPoint(client_size.x, client_size.y),
+										wxSize(430,200),
+										m_notebook_style);
+	   _tabs->Freeze();
+
+	   wxBitmap page_bmp = wxArtProvider::GetBitmap(wxART_NORMAL_FILE, wxART_OTHER, wxSize(16,16));
+	}
+	return _tabs;
+}
 
 // -- wxSizeReportCtrl --
 // (a utility control that always reports it's client size)
@@ -439,7 +525,7 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(ID_TransparentDrag, MainFrame::OnManagerFlag)
     EVT_MENU(ID_LiveUpdate, MainFrame::OnManagerFlag)
     EVT_MENU(ID_AllowActivePane, MainFrame::OnManagerFlag)
-    EVT_MENU(ID_NotebookTabFixedWidth, MainFrame::OnNotebookFlag)
+    /*EVT_MENU(ID_NotebookTabFixedWidth, MainFrame::OnNotebookFlag)
     EVT_MENU(ID_NotebookNoCloseButton, MainFrame::OnNotebookFlag)
     EVT_MENU(ID_NotebookCloseButton, MainFrame::OnNotebookFlag)
     EVT_MENU(ID_NotebookCloseButtonAll, MainFrame::OnNotebookFlag)
@@ -450,7 +536,7 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(ID_NotebookScrollButtons, MainFrame::OnNotebookFlag)
     EVT_MENU(ID_NotebookWindowList, MainFrame::OnNotebookFlag)
     EVT_MENU(ID_NotebookArtGloss, MainFrame::OnNotebookFlag)
-    EVT_MENU(ID_NotebookArtSimple, MainFrame::OnNotebookFlag)
+    EVT_MENU(ID_NotebookArtSimple, MainFrame::OnNotebookFlag)*/
     EVT_MENU(ID_NotebookAlignTop,     MainFrame::OnTabAlignment)
     EVT_MENU(ID_NotebookAlignBottom,  MainFrame::OnTabAlignment)
     EVT_MENU(ID_NoGradient, MainFrame::OnGradient)
@@ -459,6 +545,7 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(ID_AllowToolbarResizing, MainFrame::OnToolbarResizing)
     EVT_MENU(ID_Settings, MainFrame::OnSettings)
     EVT_MENU(ID_CustomizeToolbar, MainFrame::OnCustomizeToolbar)
+    EVT_MENU(wxID_NEW, MainFrame::OnNew)
     EVT_MENU(wxID_EXIT, MainFrame::OnExit)
     EVT_MENU(wxID_ABOUT, MainFrame::OnAbout)
     EVT_UPDATE_UI(ID_NotebookTabFixedWidth, MainFrame::OnUpdateUI)
@@ -492,7 +579,7 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainFrame::OnNotebookPageClose)
     EVT_AUINOTEBOOK_PAGE_CLOSED(wxID_ANY, MainFrame::OnNotebookPageClosed)
 	EVT_AUINOTEBOOK_PAGE_CHANGED(wxID_ANY, MainFrame::OnNotebookPageChanged)
-    EVT_TREE_SEL_CHANGED(ID_TreeCtrl, MainFrame::OnTreeItemChanged)
+    EVT_TREE_SEL_CHANGED(CoreTraits::ID_TreeCtrl, MainFrame::OnTreeItemChanged)
 wxEND_EVENT_TABLE()
 
 
@@ -504,20 +591,23 @@ MainFrame::MainFrame(wxWindow* parent,
                  long style)
         : wxFrame(parent, id, title, pos, size, style)
 {
+	CoreTraits::get(this);
+
     // tell wxAuiManager to manage this frame
     m_mgr.SetManagedWindow(this);
 
     // set frame icon
     SetIcon(wxIcon(sample_xpm));
 
-    // set up default notebook style
-    m_notebook_style = wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxNO_BORDER;
-    m_notebook_theme = 0;
 
     // create menu
     wxMenuBar* mb = new wxMenuBar;
 
     wxMenu* file_menu = new wxMenu;
+    file_menu->Append(wxID_NEW);
+    file_menu->Append(wxID_OPEN);
+    file_menu->Append(wxID_SAVE);
+    file_menu->Append(wxID_SAVEAS);
     file_menu->Append(wxID_EXIT);
 
     wxMenu* view_menu = new wxMenu;
@@ -743,11 +833,14 @@ MainFrame::MainFrame(wxWindow* parent,
                   Left().Layer(1).
                   CloseButton(true).MaximizeButton(true));
 
-	wxTreeCtrl* _tree;
-    m_mgr.AddPane(_tree = CreateTreeCtrl(), wxAuiPaneInfo().
+    m_mgr.AddPane(CoreTraits::get(this)->GetTreeCtrl(), wxAuiPaneInfo().
                   Name(wxT("test8")).Caption(wxT("Tree Pane")).
                   Left().Layer(1).Position(1).
                   CloseButton(true).MinimizeButton(true));
+    m_mgr.AddPane(CoreTraits::get(this)->GetPropGrid(), wxAuiPaneInfo().
+                  Name(wxT("properties")).Caption(_("Properties")).
+                  Float().FloatingPosition(GetStartPosition()).
+                  FloatingSize(wxSize(300,200)));
 
     m_mgr.AddPane(CreateSizeReportCtrl(), wxAuiPaneInfo().
                   Name(wxT("test9")).Caption(wxT("Min Size 200x100")).
@@ -780,7 +873,7 @@ MainFrame::MainFrame(wxWindow* parent,
                   Dockable(false).Float().Hide());
 
     // create some center panes
-    m_mgr.AddPane(CreateNotebook(), wxAuiPaneInfo().Name(wxT("notebook_content")).
+    m_mgr.AddPane(CoreTraits::get(this)->GetNotebook(), wxAuiPaneInfo().Name(wxT("notebook_content")).
                   CenterPane().PaneBorder(false));
 
     // add the toolbars to the manager
@@ -829,10 +922,21 @@ MainFrame::MainFrame(wxWindow* parent,
     m_perspectives.Add(perspective_default);
     m_perspectives.Add(perspective_all);
 
+
+   Scene* scene = new Scene(CoreTraits::get(this)->GetNotebook(), this);
+   
+   //ctrl->AddPage(scene, wxT("Canvas"), false, page_bmp);
+   CoreTraits::get(this)->GetNotebook()->AddPage(scene, wxT("Canvas"), true);
+   CoreTraits::get(this)->GetNotebook()->SetPageToolTip(0, "Welcome to wxAUI (this is a page tooltip)");
+
+   CoreTraits::get(this)->GetNotebook()->Thaw();
+
+
     // "commit" all changes made to wxAuiManager
     m_mgr.Update();
-	_scene->UpdateTree(_tree);
+	CoreTraits::get(this)->SetActiveScene(scene);
 }
+
 
 MainFrame::~MainFrame()
 {
@@ -956,7 +1060,7 @@ void MainFrame::OnManagerFlag(wxCommandEvent& event)
 }
 
 
-void MainFrame::OnNotebookFlag(wxCommandEvent& event)
+/*void MainFrame::OnNotebookFlag(wxCommandEvent& event)
 {
     int id = event.GetId();
 
@@ -1031,7 +1135,7 @@ void MainFrame::OnNotebookFlag(wxCommandEvent& event)
     }
 
 
-}
+}*/
 
 
 void MainFrame::OnUpdateUI(wxUpdateUIEvent& event)
@@ -1094,7 +1198,7 @@ void MainFrame::OnUpdateUI(wxUpdateUIEvent& event)
             event.Check((flags & wxAUI_MGR_NO_VENETIAN_BLINDS_FADE) != 0);
             break;
 
-        case ID_NotebookNoCloseButton:
+        /*case ID_NotebookNoCloseButton:
             event.Check((m_notebook_style & (wxAUI_NB_CLOSE_BUTTON|wxAUI_NB_CLOSE_ON_ALL_TABS|wxAUI_NB_CLOSE_ON_ACTIVE_TAB)) != 0);
             break;
         case ID_NotebookCloseButton:
@@ -1130,11 +1234,9 @@ void MainFrame::OnUpdateUI(wxUpdateUIEvent& event)
         case ID_NotebookArtSimple:
             event.Check(m_notebook_style == 1);
             break;
-
+		*/
     }
 }
-
-static wxTreeCtrl* g_ctrl = 0;
 
 void MainFrame::OnPaneClose(wxAuiManagerEvent& evt)
 {
@@ -1218,7 +1320,7 @@ void MainFrame::OnNotebookPageChanged(wxAuiNotebookEvent& evt)
 	wxWindow* sel = ctrl->GetCurrentPage();
 	Scene* s = dynamic_cast<Scene*>(sel);
 	if (s) {
-		s->UpdateTree(g_ctrl);
+		CoreTraits::get(this)->SetActiveScene(s);
 	}
 }
 
@@ -1245,26 +1347,24 @@ void MainFrame::OnCreateTree(wxCommandEvent& WXUNUSED(event))
                   Float().FloatingPosition(GetStartPosition()).
                   FloatingSize(wxSize(150,300)));
     */
-	m_mgr.GetPane(g_ctrl).Show();
+	m_mgr.GetPane(CoreTraits::get(this)->GetTreeCtrl()).Show();
 	m_mgr.Update();
 }
 
 void MainFrame::OnCreateGrid(wxCommandEvent& WXUNUSED(event))
 {
-    m_mgr.AddPane(CreatePropGrid(), wxAuiPaneInfo().
-                  Caption(wxT("Grid")).
-                  Float().FloatingPosition(GetStartPosition()).
-                  FloatingSize(wxSize(300,200)));
+	m_mgr.GetPane(CoreTraits::get(this)->GetPropGrid()).Show();
     m_mgr.Update();
 }
 
 void MainFrame::OnCreateNotebook(wxCommandEvent& WXUNUSED(event))
 {
-    m_mgr.AddPane(CreateNotebook(), wxAuiPaneInfo().
-                  Caption(wxT("Notebook")).
-                  Float().FloatingPosition(GetStartPosition()).
+	m_mgr.GetPane(CoreTraits::get(this)->GetNotebook()).Show();
+    //m_mgr.AddPane(, wxAuiPaneInfo().
+     //             Caption(wxT("Notebook")).
+     //             Float().FloatingPosition(GetStartPosition()).
                   //FloatingSize(300,200).
-                  CloseButton(true).MaximizeButton(true));
+       //           CloseButton(true).MaximizeButton(true));
     m_mgr.Update();
 }
 
@@ -1353,6 +1453,19 @@ void MainFrame::OnTabAlignment(wxCommandEvent &evt)
     }
 }
 
+void MainFrame::OnNew(wxCommandEvent& WXUNUSED(event))
+{
+	wxAuiNotebook* ctrl = CoreTraits::get(this)->GetNotebook();
+   Scene* scene = new Scene(ctrl, this);
+   
+   ctrl->AddPage(scene, wxT("Canvas"), true);
+   ctrl->SetPageToolTip(0, "Welcome to wxAUI (this is a page tooltip)");
+	CoreTraits::get(this)->SetActiveScene(scene);
+   //ctrl->Thaw();
+   //return ctrl;
+}
+
+
 void MainFrame::OnExit(wxCommandEvent& WXUNUSED(event))
 {
     Close(true);
@@ -1379,63 +1492,14 @@ wxTextCtrl* MainFrame::CreateTextCtrl(const wxString& ctrl_text)
 }
 
 
-wxPropertyGrid* MainFrame::CreatePropGrid()
-{
-	// Construct wxPropertyGrid control
-	wxPropertyGrid* pg = new wxPropertyGrid(
-		this, // parent
-		wxID_ANY, // id
-		wxDefaultPosition, // position
-		wxSize(150, 250), // size
-		// Here are just some of the supported window styles
-		wxPG_AUTO_SORT | // Automatic sorting after items added
-		wxPG_SPLITTER_AUTO_CENTER | // Automatically center splitter until user manually adjusts it
-		// Default style
-		wxPG_DEFAULT_STYLE | wxNO_BORDER | wxWANTS_CHARS);
-	// Window style flags are at premium, so some less often needed ones are
-	// available as extra window styles (wxPG_EX_xxx) which must be set using
-	// SetExtraStyle member function. wxPG_EX_HELP_AS_TOOLTIPS, for instance,
-	// allows displaying help strings as tool tips.
-	pg->SetExtraStyle(wxPG_EX_HELP_AS_TOOLTIPS);
-	// One way to add category (similar to how other properties are added)
-	pg->Append(new wxPropertyCategory("Main"));
-	// All these are added to "Main" category
-	pg->Append(new wxStringProperty("Name"));
-	pg->Append(new wxIntProperty("Age", wxPG_LABEL, 25));
-	pg->Append(new wxIntProperty("Height", wxPG_LABEL, 180));
-	pg->Append(new wxIntProperty("Weight"));
-	// Another one
-	pg->Append(new wxPropertyCategory("Attributes"));
-	// All these are added to "Attributes" category
-	pg->Append(new wxIntProperty("Intelligence"));
-	pg->Append(new wxIntProperty("Agility"));
-	pg->Append(new wxIntProperty("Strength"));
-
-    return pg;
-}
-
-
-wxTreeCtrl* MainFrame::CreateTreeCtrl()
-{
-    wxTreeCtrl* tree = new wxTreeCtrl(this, ID_TreeCtrl,
-                                      wxPoint(0,0), wxSize(160,250),
-                                      wxTR_DEFAULT_STYLE | wxNO_BORDER);
-
-    wxImageList* imglist = new wxImageList(16, 16, true, 2);
-    imglist->Add(wxArtProvider::GetBitmap(wxART_FOLDER, wxART_OTHER, wxSize(16,16)));
-    imglist->Add(wxArtProvider::GetBitmap(wxART_NORMAL_FILE, wxART_OTHER, wxSize(16,16)));
-    tree->AssignImageList(imglist);
-
-    return g_ctrl = tree;
-}
 
 void MainFrame::OnTreeItemChanged(wxTreeEvent& event)
 {
 	printf("Changed\n");
-	wxTreeItemData* d = g_ctrl->GetItemData(event.GetItem());
+	wxTreeItemData* d = CoreTraits::get(this)->GetTreeCtrl()->GetItemData(event.GetItem());
 	TreeNodePtr* n = dynamic_cast<TreeNodePtr*>(d);
-	if (n) {
-		_scene->select(n->get());
+	if (n && CoreTraits::get()->GetScene()) {
+		CoreTraits::get()->GetScene()->select(n->get());
 	}
 }
 
@@ -1459,12 +1523,13 @@ wxSizeReportCtrl* MainFrame::CreateSizeReportCtrl(int width, int height)
     return ctrl;
 }*/
 
-wxAuiNotebook* MainFrame::CreateNotebook()
+
+/*wxAuiNotebook* MainFrame::CreateNotebook()
 {
    // create the notebook off-window to avoid flicker
    wxSize client_size = GetClientSize();
 
-   wxAuiNotebook* ctrl = new wxAuiNotebook(this, wxID_ANY,
+   ctrl = new wxAuiNotebook(this, wxID_ANY,
                                     wxPoint(client_size.x, client_size.y),
                                     wxSize(430,200),
                                     m_notebook_style);
@@ -1518,14 +1583,7 @@ wxAuiNotebook* MainFrame::CreateNotebook()
    ctrl->AddPage( new wxTextCtrl( ctrl, wxID_ANY, wxT("Some more text"),
                 wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxNO_BORDER) , wxT("wxTextCtrl 8") );
 	*/
-   _scene = new Scene(ctrl, this);
-   
-   ctrl->AddPage(_scene, wxT("Canvas"), false, page_bmp);
-   ctrl->SetPageToolTip(0, "Welcome to wxAUI (this is a page tooltip)");
 
-   ctrl->Thaw();
-   return ctrl;
-}
 
 wxString MainFrame::GetIntroText()
 {

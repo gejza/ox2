@@ -28,6 +28,8 @@ public:
 protected:
 	wxTreeItemId _tree_id;
 	bool _selected;
+
+	friend class TreeNodePtr;
 };
 
 
@@ -36,6 +38,7 @@ class TreeNodePtr : public wxTreeItemData
 public:
 	TreeNodePtr(Node* node) : _node(node) {}
 	~TreeNodePtr() {
+		_node->_tree_id = 0;
 		printf("Destroy %s\n", _node->ClassName());
 	}
 	Node* get() {
