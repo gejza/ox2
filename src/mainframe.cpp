@@ -691,6 +691,7 @@ MainFrame::MainFrame(wxWindow* parent,
     help_menu->Append(wxID_ABOUT);
 
     mb->Append(file_menu, _("&File"));
+	mb->Append(edit_menu, _("&Edit"));
     mb->Append(view_menu, _("&View"));
     mb->Append(m_perspectives_menu, _("&Perspectives"));
     mb->Append(options_menu, _("&Options"));
@@ -705,9 +706,10 @@ MainFrame::MainFrame(wxWindow* parent,
 	status->SetFieldsCount(2);
 	wxRect rect;
 	status->GetFieldRect(1, rect);
-	m_slider = new wxSlider(GetStatusBar(), ID_Slider, 100, 10, 400,
+	m_slider = new wxSlider(GetStatusBar(), ID_Slider, 100, 10, 200,
 		                             rect.GetTopLeft(), rect.GetSize(),
-									    wxSL_VALUE_LABEL|wxSL_AUTOTICKS|wxSL_RIGHT);
+									 /*wxSL_VALUE_LABEL|*/wxSL_AUTOTICKS | wxSL_HORIZONTAL);
+	m_slider->SetTickFreq(20);
 
 
     // min size for the frame itself isn't completely done.
@@ -945,14 +947,16 @@ MainFrame::MainFrame(wxWindow* parent,
     m_perspectives.Add(perspective_default);
     m_perspectives.Add(perspective_all);
 
-
+	
    Scene* scene = new Scene(CoreTraits::get(this)->GetNotebook(), this);
    
    //ctrl->AddPage(scene, wxT("Canvas"), false, page_bmp);
-   CoreTraits::get(this)->GetNotebook()->AddPage(scene, wxT("Canvas"), true);
+   CoreTraits::get(this)->GetNotebook()->AddPage(scene, wxT("New scene"), true);
    CoreTraits::get(this)->GetNotebook()->SetPageToolTip(0, "Welcome to wxAUI (this is a page tooltip)");
 
    CoreTraits::get(this)->GetNotebook()->Thaw();
+   
+
 
 	mFileHistory = new wxFileHistory(10);
 	mFileHistory->UseMenu(recent_menu);

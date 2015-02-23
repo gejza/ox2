@@ -33,7 +33,7 @@
 #include "mainframe.h"
 
 #include <fstream>
-#include <json/writer.h>
+//#include <json/writer.h>
 
 #include <wx/xml/xml.h>
 
@@ -1373,6 +1373,31 @@ void Scene::OnMouseDown(wxMouseEvent &event)
     CaptureMouse() ;
 }
 
+class MoveCommand : public wxCommand
+{
+public:
+	MoveCommand(Scene* scene, Node* node, const wxPoint& from, const wxPoint& to) :
+		wxCommand(true, "move"), _scene(scene), _node(node), _from(from), _to(to) {}
+	// Override this to perform a command
+	virtual bool Do() {
+		_node->move(_to);
+		_scene->Refresh();
+		return true;
+	}
+
+	// Override this to undo a command
+	virtual bool Undo() {
+		_node->move(_from);
+		_scene->Refresh();
+		return true;
+	}
+private:
+	Scene* _scene;
+	Node* _node;
+	wxPoint _from;
+	wxPoint _to;
+};
+
 void Scene::OnMouseUp(wxMouseEvent &event)
 {
     if ( m_rubberBand )
@@ -1394,7 +1419,8 @@ void Scene::OnMouseUp(wxMouseEvent &event)
         {
 			Node* n = m_root.find(m_anchorpoint.x/m_scale,m_anchorpoint.y/m_scale);
 			if (n) {
-				n->move(endpoint);
+				CoreTraits::get()->GetCmds()->Submit(new MoveCommand(this, n, m_anchorpoint, endpoint));
+				//n->move(endpoint);
 			}
             //wxLogMessage("Selected rectangle from (%d, %d) to (%d, %d)",
             //             m_anchorpoint.x, m_anchorpoint.y,

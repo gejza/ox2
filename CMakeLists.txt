@@ -5,6 +5,7 @@ project (SceneEditor)
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} cmake)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY})
 
+if(UNIX)
 message("----------- trying to find JsonCpp-------------")
 find_package(JsonCpp)
 
@@ -24,6 +25,7 @@ endif(JSONCPP_FOUND)
 add_executable(jsonparser testjson.cpp)
 target_link_libraries(jsonparser ${JSONCPP_LIBRARY})
 
+endif(UNIX)
 
 find_package(wxWidgets COMPONENTS core base adv aui ribbon propgrid html xml)
 if(wxWidgets_FOUND)

@@ -71,7 +71,7 @@ bool MyApp::OnInit()
 	std::cout << "* Splash Screen created" << std::endl;
 	*/
 
-	sleep(3);
+	//sleep(3);
     frame->Show(true);
 
 	if (m_file2open != "") {
