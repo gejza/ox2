@@ -602,7 +602,7 @@ MainFrame::MainFrame(wxWindow* parent,
     m_mgr.SetManagedWindow(this);
 
     // set frame icon
-    SetIcon(wxIcon(sample_xpm));
+    SetIcon(wxICON(sample_xpm));
 
 
     // create menu
