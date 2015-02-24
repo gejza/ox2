@@ -103,6 +103,32 @@ wxEND_EVENT_TABLE()
 
 #include "smile.xpm"
 
+Scene::Scene()
+{
+	m_owner = NULL;
+	m_active = NULL;
+	m_show = File_ShowDefault;
+	m_smile_bmp = wxBitmap(smile_xpm);
+	m_std_icon = wxArtProvider::GetIcon(wxART_INFORMATION);
+	m_clip = false;
+	m_rubberBand = false;
+	m_scale = 0.7;
+#if wxUSE_GRAPHICS_CONTEXT
+	m_useContext = false;
+#endif
+	m_useBuffer = false;
+
+	/*
+	m_root.Add(new NodeCircle(100,100,20));
+	m_root.Add(new NodeCircle(200,100,30));
+	m_root.Add(new NodeCircle(300,100,40));
+	m_root.Add(new NodeImage(wxPoint(250,100), "logo.png"));
+	this->Save(wxT("scene.xml"));
+	*/
+	//this->Load(wxT("scene.xml"));
+
+}
+
 Scene::Scene(wxWindow *parent, MainFrame* owner)
 : wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxSize(400, 300),
                            wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE)
@@ -129,6 +155,30 @@ Scene::Scene(wxWindow *parent, MainFrame* owner)
 	*/
 	//this->Load(wxT("scene.xml"));
 
+}
+
+void Scene::Create(wxWindow *parent, MainFrame* owner)
+{
+	m_owner = owner;
+	wxScrolledWindow::Create(parent, wxID_ANY, wxDefaultPosition, wxSize(400, 300),
+		wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE);
+}
+
+void Scene::Load(DocumentIstream& stream)
+{
+	wxXmlDocument doc;
+	if (!doc.Load(stream)) {
+		wxLogWarning(wxT("Problème avec la création du fichier de configuration %s"), wxT("config.xml"));
+		return;
+	}
+	m_root.load(doc.GetRoot());
+}
+
+void Scene::Save(DocumentOstream& stream)
+{
+	wxXmlDocument doc;
+	doc.SetRoot(m_root.serialize());
+	doc.Save(stream);
 }
 
 void Scene::Save(const wxString& fn)

@@ -43,11 +43,23 @@
 
 class MainFrame;
 
+// In your own code you would normally use std::stream classes only and so
+// wouldn't need these typedefs
+#if wxUSE_STD_IOSTREAM11
+typedef wxSTD istream DocumentIstream;
+typedef wxSTD ostream DocumentOstream;
+#else // !wxUSE_STD_IOSTREAM
+typedef wxInputStream DocumentIstream;
+typedef wxOutputStream DocumentOstream;
+#endif // wxUSE_STD_IOSTREAM/!wxUSE_STD_IOSTREAM
+
 // define a scrollable canvas for drawing onto
 class Scene: public wxScrolledWindow
 {
 public:
+	Scene();
     Scene( wxWindow *parent, MainFrame* owner );
+	void Create(wxWindow *parent, MainFrame* owner);
 
     void OnPaint(wxPaintEvent &event);
     void OnMouseMove(wxMouseEvent &event);
@@ -68,6 +80,8 @@ public:
 
 	void Load(const wxString& fn);
 	void Save(const wxString& fn);
+	void Load(DocumentIstream& stream);
+	void Save(DocumentOstream& stream);
 	void UpdateTree(wxTreeCtrl* ctrl);
 	void select(Node* node) {
 		if (m_active) {

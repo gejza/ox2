@@ -23,6 +23,9 @@ public:
 	wxTreeCtrl* GetTreeCtrl();
     wxPropertyGrid* GetPropGrid();
     wxAuiNotebook* GetNotebook();
+	MainFrame* GetMainFrame() {
+		return _main;
+	}
 	wxCommandProcessor* GetCmds() {
 		return &_cmds;
 	}
