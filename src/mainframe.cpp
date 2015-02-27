@@ -701,15 +701,20 @@ MainFrame::MainFrame(wxWindow* parent,
     SetMenuBar(mb);
 
     CreateStatusBar();
-    GetStatusBar()->SetStatusText(_("Ready"));
 	wxStatusBar * status = GetStatusBar();
 	status->SetFieldsCount(StatusBarField_Count);
+	int status_widths[StatusBarField_Count] = { -1, -1, -1 };
+	status_widths[StatusBarField_Text] = -2;
+	status_widths[StatusBarField_Zoom] = 50;
+	status->SetStatusWidths(StatusBarField_Count, status_widths);
 	wxRect rect;
 	status->GetFieldRect(StatusBarField_Slider, rect);
 	m_slider = new wxSlider(GetStatusBar(), ID_Slider, 100, 10, 200,
 		                             rect.GetTopLeft(), rect.GetSize(),
 									 /*wxSL_VALUE_LABEL|*/wxSL_AUTOTICKS | wxSL_HORIZONTAL);
 	m_slider->SetTickFreq(20);
+    GetStatusBar()->SetStatusText(_("Ready"), StatusBarField_Text);
+    GetStatusBar()->SetStatusText(_("100%"), StatusBarField_Zoom);
 
 
     // min size for the frame itself isn't completely done.
@@ -1690,7 +1695,9 @@ void MainFrame::OnSlider(wxScrollEvent& event)
     wxASSERT_MSG( event.GetInt() == m_slider->GetValue(),
                   wxT("slider value should be the same") );
 
-	CoreTraits::get()->GetScene()->SetZoom(event.GetInt() / 100.f);
+	int zoom = event.GetInt();
+    GetStatusBar()->SetStatusText(wxString::Format(_("%d%%"), zoom), StatusBarField_Zoom);
+	CoreTraits::get()->GetScene()->SetZoom(zoom / 100.f);
 
 }
 
