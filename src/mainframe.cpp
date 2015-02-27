@@ -701,15 +701,20 @@ MainFrame::MainFrame(wxWindow* parent,
     SetMenuBar(mb);
 
     CreateStatusBar();
-    GetStatusBar()->SetStatusText(_("Ready"));
 	wxStatusBar * status = GetStatusBar();
-	status->SetFieldsCount(2);
+	status->SetFieldsCount(StatusBarField_Count);
+	int status_widths[StatusBarField_Count] = { -1, -1, -1 };
+	status_widths[StatusBarField_Text] = -2;
+	status_widths[StatusBarField_Zoom] = 50;
+	status->SetStatusWidths(StatusBarField_Count, status_widths);
 	wxRect rect;
-	status->GetFieldRect(1, rect);
+	status->GetFieldRect(StatusBarField_Slider, rect);
 	m_slider = new wxSlider(GetStatusBar(), ID_Slider, 100, 10, 200,
 		                             rect.GetTopLeft(), rect.GetSize(),
 									 /*wxSL_VALUE_LABEL|*/wxSL_AUTOTICKS | wxSL_HORIZONTAL);
 	m_slider->SetTickFreq(20);
+    GetStatusBar()->SetStatusText(_("Ready"), StatusBarField_Text);
+    GetStatusBar()->SetStatusText(_("100%"), StatusBarField_Zoom);
 
 
     // min size for the frame itself isn't completely done.
@@ -717,6 +722,14 @@ MainFrame::MainFrame(wxWindow* parent,
     // code. For now, just hard code a frame minimum size
     SetMinSize(wxSize(400,300));
 
+	wxConfigBase *pConfig = wxConfigBase::Get();
+	// restore frame position and size
+  	int x = pConfig->Read(_T("/MainFrame/x"), 50),
+      	y = pConfig->Read(_T("/MainFrame/y"), 50),
+      	w = pConfig->Read(_T("/MainFrame/w"), 350),
+      	h = pConfig->Read(_T("/MainFrame/h"), 200);
+  	Move(x, y);
+  	SetClientSize(w, h);
 
 
     // prepare a few custom overflow elements for the toolbars' overflow buttons
@@ -961,7 +974,9 @@ MainFrame::MainFrame(wxWindow* parent,
 	mFileHistory = new wxFileHistory(10);
 	mFileHistory->UseMenu(recent_menu);
 	mFileHistory->AddFilesToMenu(recent_menu);
-	mFileHistory->Load(*wxConfigBase::Get());
+	
+	pConfig->SetPath(_T("/History"));
+	mFileHistory->Load(*pConfig);
 
     // "commit" all changes made to wxAuiManager
     m_mgr.Update();
@@ -972,7 +987,22 @@ MainFrame::MainFrame(wxWindow* parent,
 
 MainFrame::~MainFrame()
 {
-	mFileHistory->Save(*wxConfigBase::Get());
+	wxConfigBase *pConfig = wxConfigBase::Get();
+  	if ( pConfig == NULL )
+    	return;
+
+	pConfig->SetPath(_T("/History"));
+	mFileHistory->Save(*pConfig);
+
+  // save the frame position
+  int x, y, w, h;
+  GetClientSize(&w, &h);
+  GetPosition(&x, &y);
+  pConfig->Write(_T("/MainFrame/x"), (long) x);
+  pConfig->Write(_T("/MainFrame/y"), (long) y);
+  pConfig->Write(_T("/MainFrame/w"), (long) w);
+  pConfig->Write(_T("/MainFrame/h"), (long) h);
+
     m_mgr.UnInit();
 }
 
@@ -993,7 +1023,13 @@ void MainFrame::OnEraseBackground(wxEraseEvent& event)
 
 void MainFrame::OnSize(wxSizeEvent& event)
 {
-    event.Skip();
+    //event.Skip();
+	wxStatusBar * status = GetStatusBar();
+	wxRect rect;
+	status->GetFieldRect(StatusBarField_Slider, rect);
+	rect.SetWidth(rect.GetWidth()-5);
+	m_slider->SetPosition(rect.GetTopLeft());
+	m_slider->SetSize(rect.GetSize());
 }
 
 void MainFrame::OnSettings(wxCommandEvent& WXUNUSED(evt))
@@ -1659,7 +1695,9 @@ void MainFrame::OnSlider(wxScrollEvent& event)
     wxASSERT_MSG( event.GetInt() == m_slider->GetValue(),
                   wxT("slider value should be the same") );
 
-	CoreTraits::get()->GetScene()->SetZoom(event.GetInt() / 100.f);
+	int zoom = event.GetInt();
+    GetStatusBar()->SetStatusText(wxString::Format(_("%d%%"), zoom), StatusBarField_Zoom);
+	CoreTraits::get()->GetScene()->SetZoom(zoom / 100.f);
 
 }
 
