@@ -703,9 +703,9 @@ MainFrame::MainFrame(wxWindow* parent,
     CreateStatusBar();
     GetStatusBar()->SetStatusText(_("Ready"));
 	wxStatusBar * status = GetStatusBar();
-	status->SetFieldsCount(2);
+	status->SetFieldsCount(StatusBarField_Count);
 	wxRect rect;
-	status->GetFieldRect(1, rect);
+	status->GetFieldRect(StatusBarField_Slider, rect);
 	m_slider = new wxSlider(GetStatusBar(), ID_Slider, 100, 10, 200,
 		                             rect.GetTopLeft(), rect.GetSize(),
 									 /*wxSL_VALUE_LABEL|*/wxSL_AUTOTICKS | wxSL_HORIZONTAL);
@@ -993,7 +993,13 @@ void MainFrame::OnEraseBackground(wxEraseEvent& event)
 
 void MainFrame::OnSize(wxSizeEvent& event)
 {
-    event.Skip();
+    //event.Skip();
+	wxStatusBar * status = GetStatusBar();
+	wxRect rect;
+	status->GetFieldRect(StatusBarField_Slider, rect);
+	rect.SetWidth(rect.GetWidth()-5);
+	m_slider->SetPosition(rect.GetTopLeft());
+	m_slider->SetSize(rect.GetSize());
 }
 
 void MainFrame::OnSettings(wxCommandEvent& WXUNUSED(evt))

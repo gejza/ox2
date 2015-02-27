@@ -48,6 +48,7 @@ bool MyApp::OnInit()
 
 	wxConfigBase *pConfig = wxConfigBase::Get();
 	pConfig->SetRecordDefaults();
+
 	//Splash screen
 	wxBitmap bitmap;
 	if (bitmap.LoadFile("res/splash.png", wxBITMAP_TYPE_PNG))

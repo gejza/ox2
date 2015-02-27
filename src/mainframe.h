@@ -102,6 +102,12 @@ class MainFrame : public wxFrame
         ID_FirstPerspective = ID_CreatePerspective+1000
     };
 
+	enum {
+		StatusBarField_Text,
+		StatusBarField_Zoom,
+		StatusBarField_Slider,
+		StatusBarField_Count,
+	};
 public:
     MainFrame(wxWindow* parent,
             wxWindowID id,
