@@ -717,6 +717,14 @@ MainFrame::MainFrame(wxWindow* parent,
     // code. For now, just hard code a frame minimum size
     SetMinSize(wxSize(400,300));
 
+	wxConfigBase *pConfig = wxConfigBase::Get();
+	// restore frame position and size
+  	int x = pConfig->Read(_T("/MainFrame/x"), 50),
+      	y = pConfig->Read(_T("/MainFrame/y"), 50),
+      	w = pConfig->Read(_T("/MainFrame/w"), 350),
+      	h = pConfig->Read(_T("/MainFrame/h"), 200);
+  	Move(x, y);
+  	SetClientSize(w, h);
 
 
     // prepare a few custom overflow elements for the toolbars' overflow buttons
@@ -961,7 +969,9 @@ MainFrame::MainFrame(wxWindow* parent,
 	mFileHistory = new wxFileHistory(10);
 	mFileHistory->UseMenu(recent_menu);
 	mFileHistory->AddFilesToMenu(recent_menu);
-	mFileHistory->Load(*wxConfigBase::Get());
+	
+	pConfig->SetPath(_T("/History"));
+	mFileHistory->Load(*pConfig);
 
     // "commit" all changes made to wxAuiManager
     m_mgr.Update();
@@ -972,7 +982,22 @@ MainFrame::MainFrame(wxWindow* parent,
 
 MainFrame::~MainFrame()
 {
-	mFileHistory->Save(*wxConfigBase::Get());
+	wxConfigBase *pConfig = wxConfigBase::Get();
+  	if ( pConfig == NULL )
+    	return;
+
+	pConfig->SetPath(_T("/History"));
+	mFileHistory->Save(*pConfig);
+
+  // save the frame position
+  int x, y, w, h;
+  GetClientSize(&w, &h);
+  GetPosition(&x, &y);
+  pConfig->Write(_T("/MainFrame/x"), (long) x);
+  pConfig->Write(_T("/MainFrame/y"), (long) y);
+  pConfig->Write(_T("/MainFrame/w"), (long) w);
+  pConfig->Write(_T("/MainFrame/h"), (long) h);
+
     m_mgr.UnInit();
 }
 
