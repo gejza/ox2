@@ -1,4 +1,4 @@
-# Oxygine 2D Extension Toolset
+# Oxygine 2D Extension Toolset [![Build Status](https://travis-ci.org/gejza/ox2.svg?branch=master)](https://travis-ci.org/gejza/ox2)
 
 This README would normally document whatever steps are necessary to get your application up and running.
 
