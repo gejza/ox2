@@ -4,7 +4,7 @@ compiler:
 cache:
   - apt: true
 before_install:
-    - sudo apt-get install libwxgtk3.0-dev cmake gcc
+    - sudo apt-get install cmake wx3.0-headers libwxgtk3.0-dev
 before_script:
   - mkdir build
   - cd build
