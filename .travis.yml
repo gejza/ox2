@@ -6,7 +6,10 @@ cache:
 before_install:
     - sudo apt-get install libwxgtk3.0-dev cmake gcc
 before_script:
-  - travis_retry cmake .
+  - mkdir build
+  - cd build
+  - travis_retry cmake ..
+script: make
 notifications:
   recipients:
     - milan.dunghubel@gmail.com
