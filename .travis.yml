@@ -4,9 +4,12 @@ compiler:
 cache:
   - apt: true
 before_install:
-    - sudo apt-get install libwxgtk3.0-dev cmake
+    - sudo apt-get install cmake wx3.0-headers libwxgtk3.0-dev
 before_script:
-  - travis_retry cmake .
+  - mkdir build
+  - cd build
+  - travis_retry cmake ..
+script: make
 notifications:
   recipients:
     - milan.dunghubel@gmail.com

@@ -15,4 +15,9 @@
 
 #cmakedefine SCENEEDITOR_HOMEPAGE "@SCENEEDITOR_HOMEPAGE@"
 
+#include <wx/version.h>
+#if wxCHECK_VERSION(3, 0, 1)
+#define USE_PREFS
+#endif
+
 #endif // CONFIG_H

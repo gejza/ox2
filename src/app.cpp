@@ -150,28 +150,11 @@ int MyApp::OnExit()
 }
 
 
-class PrefsPageGeneral : public wxStockPreferencesPage
-{
-public:
-    PrefsPageGeneral() : wxStockPreferencesPage(Kind_General) {}
-    virtual wxWindow *CreateWindow(wxWindow *parent)
-        { return new PrefsPageGeneralPanel(parent); }
-};
-
-class PrefsPageTopics : public wxPreferencesPage
-{
-public:
-    virtual wxString GetName() const { return "Topics"; }
-    virtual wxBitmap GetLargeIcon() const
-        { return wxArtProvider::GetBitmap(wxART_HELP, wxART_TOOLBAR); }
-    virtual wxWindow *CreateWindow(wxWindow *parent)
-        { return new PrefsPageTopicsPanel(parent); }
-};
-
 
 
 void MyApp::ShowPreferencesEditor(wxWindow* parent)
 {
+#ifdef USE_PREFS
     if ( !m_prefEditor )
     {
         m_prefEditor.reset(new wxPreferencesEditor);
@@ -180,10 +163,13 @@ void MyApp::ShowPreferencesEditor(wxWindow* parent)
     }
 
     m_prefEditor->Show(parent);
+#endif
 }
 
 void MyApp::DismissPreferencesEditor()
 {
+#ifdef USE_PREFS
 	if ( m_prefEditor )
 		m_prefEditor->Dismiss();
+#endif
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <wx/app.h>
-#include <wx/preferences.h>
+#include "prefs.h"
 // -- application --
 
 class MyApp : public wxApp
@@ -17,7 +17,9 @@ public:
 	void DismissPreferencesEditor();
 private:
 	wxString m_file2open;
+#ifdef USE_PREFS
 	wxScopedPtr<wxPreferencesEditor> m_prefEditor;
+#endif
 };
 
 DECLARE_APP(MyApp)

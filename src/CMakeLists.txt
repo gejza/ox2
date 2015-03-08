@@ -10,6 +10,7 @@ add_executable(SceneEditor WIN32
 		resources.h resources.cpp
 		dialogs.h dialogs.cpp
 		editor.rc
+		prefs.h prefs.cpp
 		)
 target_link_libraries(SceneEditor ${wxWidgets_LIBRARIES} ${JSONCPP_LIBRARY})
 
