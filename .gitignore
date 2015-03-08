@@ -14,6 +14,5 @@ docs/
 Doxyfile
 tags
 src/config.h
-
 po/POTFILES.in
 po/POTFILES
