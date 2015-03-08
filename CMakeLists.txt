@@ -13,6 +13,7 @@ option(WITH_GUI_TESTS "Enable building of GUI tests" OFF)
 option(WITH_LTO "Enable Link Time Optimization (LTO)" OFF)
 option(WITH_LANGUAGES "Enable gettext" ON)
 option(WITH_GENDOX "Generate doxygen" OFF)
+option(WITH_CTAGS "Generate ctags" OFF)
 
 IF(WITH_LANGUAGES)
 include(cmake/GettextTranslate.cmake)
@@ -97,6 +98,7 @@ IF(WITH_GENDOX)
 ENDIF(WITH_GENDOX)
 
 # Generate tag files
+IF(WITH_CTAGS)
 IF(UNIX)
 set_source_files_properties(tags PROPERTIES GENERATED true)
 add_custom_target(tags
@@ -112,6 +114,7 @@ if(CTAGS_PATH)
 	add_dependencies(SceneEditor tags)
 endif(CTAGS_PATH)
 ENDIF(UNIX)
+ENDIF(WITH_CTAGS)
 
 
 if(PRINT_SUMMARY)
