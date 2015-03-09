@@ -12,7 +12,7 @@ add_executable(SceneEditor WIN32
 		editor.rc
 		prefs.h prefs.cpp
 		)
-target_link_libraries(SceneEditor ${wxWidgets_LIBRARIES} ${JSONCPP_LIBRARY})
+target_link_libraries(SceneEditor ox2editor)
 
 install(TARGETS SceneEditor
 	RUNTIME DESTINATION bin

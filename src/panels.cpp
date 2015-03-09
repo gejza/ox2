@@ -17,11 +17,7 @@
 
 #include "panels.h"
 
-wxBEGIN_EVENT_TABLE(wxSizeReportCtrl, wxControl)
-EVT_PAINT(wxSizeReportCtrl::OnPaint)
-EVT_SIZE(wxSizeReportCtrl::OnSize)
-EVT_ERASE_BACKGROUND(wxSizeReportCtrl::OnEraseBackground)
-wxEND_EVENT_TABLE()
+
 
 
 wxBEGIN_EVENT_TABLE(SettingsPanel, wxPanel)

@@ -8,6 +8,8 @@
 
 #include "core.h"
 
+#include <ox2/editor/sizerptpanel.h>
+
 // -- frame --
 class wxSizeReportCtrl;
 
@@ -94,7 +96,7 @@ public:
 protected:
 	wxMenuBar* CreateMenuBar();
     wxTextCtrl* CreateTextCtrl(const wxString& text = wxEmptyString);
-    wxSizeReportCtrl* CreateSizeReportCtrl(int width = 80, int height = 80);
+	ox2::editor::wxSizeReportCtrl* CreateSizeReportCtrl(int width = 80, int height = 80);
     wxPoint GetStartPosition();
     //wxHtmlWindow* CreateHTMLCtrl(wxWindow* parent = NULL);
 

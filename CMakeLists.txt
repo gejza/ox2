@@ -77,6 +77,14 @@ set(LOCALEDIR "share/locale")
 
 CONFIGURE_FILE( ${CMAKE_SOURCE_DIR}/src/config.h.cmake ${CMAKE_SOURCE_DIR}/src/config.h )
 
+include_directories(include)
+
+add_library(ox2editor STATIC src/sizerptpanel.cpp include/ox2/editor/sizerptpanel.h)
+target_link_libraries(ox2editor ${wxWidgets_LIBRARIES})
+	
+#install (FILES "${PROJECT_BINARY_DIR}/TutorialConfig.h"        
+#         DESTINATION include)
+
 add_subdirectory(src)
 IF(WITH_LANGUAGES)
 add_subdirectory(po)

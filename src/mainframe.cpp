@@ -1199,9 +1199,9 @@ void MainFrame::OnTreeItemChanged(wxTreeEvent& event)
 	//CoreTraits::Get()->GetCmds()->Sub();
 }
 
-wxSizeReportCtrl* MainFrame::CreateSizeReportCtrl(int width, int height)
+ox2::editor::wxSizeReportCtrl* MainFrame::CreateSizeReportCtrl(int width, int height)
 {
-    wxSizeReportCtrl* ctrl = new wxSizeReportCtrl(this, wxID_ANY,
+	ox2::editor::wxSizeReportCtrl* ctrl = new ox2::editor::wxSizeReportCtrl(this, wxID_ANY,
                                    wxDefaultPosition,
                                    wxSize(width, height), &m_mgr);
     return ctrl;
