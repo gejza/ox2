@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+  <image x="0" y="0" res="bg"/>
+  <image x="0" y="0" res="credits"/>
+  <image x="250" y="100" res="play"/>
+</list>
