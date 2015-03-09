@@ -55,6 +55,7 @@ public:
 			std::cout << "write to conf " << _name << " val " << value << std::endl;
 		} while (0);
 		pConfig->Write(_name, value);
+		return *this;
 	}
 	bool GetBool(bool def) {
 		wxConfigBase* pConfig = wxConfigBase::Get();

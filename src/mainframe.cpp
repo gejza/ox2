@@ -50,7 +50,7 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_ERASE_BACKGROUND(MainFrame::OnEraseBackground)
     EVT_SIZE(MainFrame::OnSize)
     EVT_MENU(MainFrame::ID_CreateTree, MainFrame::OnCreateTree)
-    EVT_MENU(MainFrame::ID_CreateGrid, MainFrame::OnCreateGrid)
+	EVT_MENU(MainFrame::ID_ViewPropertyTool, MainFrame::OnViewPropertyTool)
     EVT_MENU(MainFrame::ID_CreateText, MainFrame::OnCreateText)
     EVT_MENU(MainFrame::ID_CreateSizeReport, MainFrame::OnCreateSizeReport)
     EVT_MENU(MainFrame::ID_CreateNotebook, MainFrame::OnCreateNotebook)
@@ -496,10 +496,10 @@ wxMenuBar* MainFrame::CreateMenuBar()
 	CoreTraits::get()->GetCmds()->SetEditMenu(edit_menu);
 
 	wxMenu* view_menu = new wxMenu;
+	view_menu->Append(ID_ViewPropertyTool, _("Property Manager"));
 	view_menu->AppendSeparator();
 	view_menu->Append(ID_CreateText, _("Create Text Control"));
 	view_menu->Append(ID_CreateTree, _("Create Tree"));
-	view_menu->Append(ID_CreateGrid, _("Create Grid"));
 	view_menu->Append(ID_CreateNotebook, _("Create Notebook"));
 	view_menu->Append(ID_CreateSizeReport, _("Create Size Reporter"));
 	view_menu->AppendSeparator();
@@ -987,7 +987,7 @@ void MainFrame::OnCreateTree(wxCommandEvent& WXUNUSED(event))
 	m_mgr.Update();
 }
 
-void MainFrame::OnCreateGrid(wxCommandEvent& WXUNUSED(event))
+void MainFrame::OnViewPropertyTool(wxCommandEvent& WXUNUSED(event))
 {
 	m_mgr.GetPane(CoreTraits::get(this)->GetPropGrid()).Show();
     m_mgr.Update();

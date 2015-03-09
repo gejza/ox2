@@ -36,6 +36,7 @@
 #include <wx/stattext.h>
 #include <wx/listbox.h>
 #include <wx/artprov.h>
+#include <wx/log.h>
 
 #include "dialogs.h"
 #include "core.h"

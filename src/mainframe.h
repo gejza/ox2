@@ -20,7 +20,7 @@ class MainFrame : public wxFrame
     enum
     {
         ID_CreateTree = CoreTraits::ID_Max,
-        ID_CreateGrid,
+		ID_ViewPropertyTool,
         ID_CreateText,
         ID_CreateHTML,
         ID_CreateNotebook,
@@ -106,7 +106,7 @@ protected:
     void OnSize(wxSizeEvent& evt);
 
     void OnCreateTree(wxCommandEvent& evt);
-    void OnCreateGrid(wxCommandEvent& evt);
+    void OnViewPropertyTool(wxCommandEvent& evt);
     void OnCreateNotebook(wxCommandEvent& evt);
     void OnCreateText(wxCommandEvent& evt);
     void OnCreateSizeReport(wxCommandEvent& evt);
