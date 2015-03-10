@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SceneEditor\n"
 "Report-Msgid-Bugs-To: gejza@gejza.net\n"
-"POT-Creation-Date: 2015-03-04 01:28+0100\n"
+"POT-Creation-Date: 2015-03-09 00:46+0100\n"
 "PO-Revision-Date: 2015-03-04 01:27+0100\n"
 "Last-Translator: Milan Dunghubel <milan.dunghubel@gmail.com>\n"
 "Language-Team: \n"
@@ -28,6 +28,18 @@ msgstr "Nepodařilo otevřít %s"
 #, c-format
 msgid "Failed load image from file %s"
 msgstr "Nepodařilo image zatížení ze souboru %s"
+
+#: ../src/dialogs.cpp:17
+msgid "Show Splash Screen"
+msgstr ""
+
+#: ../src/dialogs.cpp:20
+msgid "Check spelling"
+msgstr ""
+
+#: ../src/dialogs.cpp:23
+msgid "Check Me!"
+msgstr ""
 
 #: ../src/resources.cpp:17
 #, c-format
@@ -51,251 +63,251 @@ msgstr "Velikost"
 msgid "Path"
 msgstr "Cesta"
 
-#: ../src/mainframe.cpp:163
+#: ../src/mainframe.cpp:164
 msgid "Ready"
 msgstr "Připravený"
 
-#: ../src/mainframe.cpp:164
+#: ../src/mainframe.cpp:165
 msgid "100%"
 msgstr "100%"
 
-#: ../src/mainframe.cpp:193
+#: ../src/mainframe.cpp:194
 msgid "Customize..."
 msgstr "Vlastní ..."
 
-#: ../src/mainframe.cpp:330
+#: ../src/mainframe.cpp:331
 msgid "Properties"
 msgstr "Vlastnosti"
 
-#: ../src/mainframe.cpp:397
+#: ../src/mainframe.cpp:398
 msgid "Test Button"
 msgstr "Testovací Button"
 
-#: ../src/mainframe.cpp:497
+#: ../src/mainframe.cpp:500
 msgid "Create Text Control"
 msgstr "Vytváření textu Control"
 
-#: ../src/mainframe.cpp:498
+#: ../src/mainframe.cpp:501
 msgid "Create Tree"
 msgstr "Vytvořit strom"
 
-#: ../src/mainframe.cpp:499
+#: ../src/mainframe.cpp:502
 msgid "Create Grid"
 msgstr "Vytvoření mřížky"
 
-#: ../src/mainframe.cpp:500
+#: ../src/mainframe.cpp:503
 msgid "Create Notebook"
 msgstr "Vytvořit Notebook"
 
-#: ../src/mainframe.cpp:501
+#: ../src/mainframe.cpp:504
 msgid "Create Size Reporter"
 msgstr "Vytvořit velikosti Reporter"
 
-#: ../src/mainframe.cpp:503
+#: ../src/mainframe.cpp:506
 msgid "Use a Grid for the Content Pane"
 msgstr "Použijte mřížky pro obsahovou podokně"
 
-#: ../src/mainframe.cpp:504
+#: ../src/mainframe.cpp:507
 msgid "Use a Text Control for the Content Pane"
 msgstr "Pomocí textového Control obsahu podokně"
 
-#: ../src/mainframe.cpp:505
+#: ../src/mainframe.cpp:508
 msgid "Use an HTML Control for the Content Pane"
 msgstr "Použijte ovládací prvek HTML pro obsahovou podokně"
 
-#: ../src/mainframe.cpp:506
+#: ../src/mainframe.cpp:509
 msgid "Use a Tree Control for the Content Pane"
 msgstr "Použijte Control strom obsahu podokně"
 
-#: ../src/mainframe.cpp:507
+#: ../src/mainframe.cpp:510
 msgid "Use a wxAuiNotebook control for the Content Pane"
 msgstr "Použijte ovládací prvek wxAuiNotebook k obsahu podokně"
 
-#: ../src/mainframe.cpp:508
+#: ../src/mainframe.cpp:511
 msgid "Use a Size Reporter for the Content Pane"
 msgstr "Použijte velikost reportér obsahu podokně"
 
-#: ../src/mainframe.cpp:511
+#: ../src/mainframe.cpp:514
 msgid "Transparent Hint"
 msgstr "Transparentní Tip"
 
-#: ../src/mainframe.cpp:512
+#: ../src/mainframe.cpp:515
 msgid "Venetian Blinds Hint"
 msgstr "Žaluzie Tip"
 
-#: ../src/mainframe.cpp:513
+#: ../src/mainframe.cpp:516
 msgid "Rectangle Hint"
 msgstr "Obdélník Tip"
 
-#: ../src/mainframe.cpp:514
+#: ../src/mainframe.cpp:517
 msgid "No Hint"
 msgstr "Ani náznak"
 
-#: ../src/mainframe.cpp:516
+#: ../src/mainframe.cpp:519
 msgid "Hint Fade-in"
 msgstr "Tip Fade-in"
 
-#: ../src/mainframe.cpp:517
+#: ../src/mainframe.cpp:520
 msgid "Allow Floating"
 msgstr "Povolit Plovoucí"
 
-#: ../src/mainframe.cpp:518
+#: ../src/mainframe.cpp:521
 msgid "Disable Venetian Blinds Hint Fade-in"
 msgstr "Zakázat Žaluzie Tip Fade-in"
 
-#: ../src/mainframe.cpp:519
+#: ../src/mainframe.cpp:522
 msgid "Transparent Drag"
 msgstr "Transparent Drag"
 
-#: ../src/mainframe.cpp:520
+#: ../src/mainframe.cpp:523
 msgid "Allow Active Pane"
 msgstr "Povolit aktivní okno"
 
-#: ../src/mainframe.cpp:521
+#: ../src/mainframe.cpp:524
 msgid "Live Resize Update"
 msgstr "Živé změny velikosti aktualizace"
 
-#: ../src/mainframe.cpp:523
+#: ../src/mainframe.cpp:526
 msgid "No Caption Gradient"
 msgstr "No popisek Gradient"
 
-#: ../src/mainframe.cpp:524
+#: ../src/mainframe.cpp:527
 msgid "Vertical Caption Gradient"
 msgstr "Vertikální Titulek Gradient"
 
-#: ../src/mainframe.cpp:525
+#: ../src/mainframe.cpp:528
 msgid "Horizontal Caption Gradient"
 msgstr "Horizontální Titulek Gradient"
 
-#: ../src/mainframe.cpp:527
+#: ../src/mainframe.cpp:530
 msgid "Allow Toolbar Resizing"
 msgstr "Povolit Toolbar Změna velikosti"
 
-#: ../src/mainframe.cpp:529
+#: ../src/mainframe.cpp:532
 msgid "Settings Pane"
 msgstr "Nastavení Pane"
 
-#: ../src/mainframe.cpp:532
+#: ../src/mainframe.cpp:535
 msgid "Glossy Theme (Default)"
 msgstr "Glossy Theme (Default)"
 
-#: ../src/mainframe.cpp:533
+#: ../src/mainframe.cpp:536
 msgid "Simple Theme"
 msgstr "Simple Theme"
 
-#: ../src/mainframe.cpp:535
+#: ../src/mainframe.cpp:538
 msgid "No Close Button"
 msgstr "No Close Button"
 
-#: ../src/mainframe.cpp:536
+#: ../src/mainframe.cpp:539
 msgid "Close Button at Right"
 msgstr "Close Button na Právo"
 
-#: ../src/mainframe.cpp:537
+#: ../src/mainframe.cpp:540
 msgid "Close Button on All Tabs"
 msgstr "Close Button na všech záložkách"
 
-#: ../src/mainframe.cpp:538
+#: ../src/mainframe.cpp:541
 msgid "Close Button on Active Tab"
 msgstr "Close Button na aktivní záložka"
 
-#: ../src/mainframe.cpp:540
+#: ../src/mainframe.cpp:543
 msgid "Tab Top Alignment"
 msgstr "Tab Top Alignment"
 
-#: ../src/mainframe.cpp:541
+#: ../src/mainframe.cpp:544
 msgid "Tab Bottom Alignment"
 msgstr "Tab Spodní Alignment"
 
-#: ../src/mainframe.cpp:543
+#: ../src/mainframe.cpp:546
 msgid "Allow Tab Move"
 msgstr "Povolit Tab Přesunout"
 
-#: ../src/mainframe.cpp:544
+#: ../src/mainframe.cpp:547
 msgid "Allow External Tab Move"
 msgstr "Povolit externí Tab Přesunout"
 
-#: ../src/mainframe.cpp:545
+#: ../src/mainframe.cpp:548
 msgid "Allow Notebook Split"
 msgstr "Povolit Notebook Rozdělit"
 
-#: ../src/mainframe.cpp:546
+#: ../src/mainframe.cpp:549
 msgid "Scroll Buttons Visible"
 msgstr "Scroll Tlačítka Visible"
 
-#: ../src/mainframe.cpp:547
+#: ../src/mainframe.cpp:550
 msgid "Window List Button Visible"
 msgstr "Okno Seznam Button Visible"
 
-#: ../src/mainframe.cpp:548
+#: ../src/mainframe.cpp:551
 msgid "Fixed-width Tabs"
 msgstr "S pevnou šířkou Tabs"
 
-#: ../src/mainframe.cpp:551
+#: ../src/mainframe.cpp:554
 msgid "Create Perspective"
 msgstr "Vytvořit výhledu"
 
-#: ../src/mainframe.cpp:552
+#: ../src/mainframe.cpp:555
 msgid "Copy Perspective Data To Clipboard"
 msgstr "Kopírovat Perspective dat do schránky"
 
-#: ../src/mainframe.cpp:554
+#: ../src/mainframe.cpp:557
 msgid "Default Startup"
 msgstr "Výchozí Startup"
 
-#: ../src/mainframe.cpp:555
+#: ../src/mainframe.cpp:558
 msgid "All Panes"
 msgstr "Všechny Panely"
 
-#: ../src/mainframe.cpp:560
+#: ../src/mainframe.cpp:563
 msgid "&File"
 msgstr "&Soubor"
 
-#: ../src/mainframe.cpp:561
+#: ../src/mainframe.cpp:564
 msgid "&Edit"
 msgstr "&Edit"
 
-#: ../src/mainframe.cpp:562
+#: ../src/mainframe.cpp:565
 msgid "&View"
 msgstr ""
 
-#: ../src/mainframe.cpp:563
+#: ../src/mainframe.cpp:566
 msgid "&Perspectives"
 msgstr ""
 
-#: ../src/mainframe.cpp:564
+#: ../src/mainframe.cpp:567
 msgid "&Options"
 msgstr "M&ožnosti"
 
-#: ../src/mainframe.cpp:565
+#: ../src/mainframe.cpp:568
 msgid "&Notebook"
 msgstr ""
 
-#: ../src/mainframe.cpp:566
+#: ../src/mainframe.cpp:569
 msgid "&Help"
 msgstr ""
 
-#: ../src/mainframe.cpp:612
+#: ../src/mainframe.cpp:615
 msgid "Customize Toolbar clicked"
 msgstr "Vlastní Toolbar klepnutí"
 
-#: ../src/mainframe.cpp:1034
+#: ../src/mainframe.cpp:1037
 msgid "Drop Down Item 1"
 msgstr "Drop Down Položka 1"
 
-#: ../src/mainframe.cpp:1038
+#: ../src/mainframe.cpp:1041
 msgid "Drop Down Item 2"
 msgstr "Drop Down Položka 2"
 
-#: ../src/mainframe.cpp:1042
+#: ../src/mainframe.cpp:1045
 msgid "Drop Down Item 3"
 msgstr "Drop Down Bod 3"
 
-#: ../src/mainframe.cpp:1046
+#: ../src/mainframe.cpp:1049
 msgid "Drop Down Item 4"
 msgstr "Drop Down bod 4"
 
-#: ../src/mainframe.cpp:1279
+#: ../src/mainframe.cpp:1289
 #, c-format
 msgid "%d%%"
 msgstr ""

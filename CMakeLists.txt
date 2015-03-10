@@ -79,7 +79,9 @@ CONFIGURE_FILE( ${CMAKE_SOURCE_DIR}/src/config.h.cmake ${CMAKE_SOURCE_DIR}/src/c
 
 include_directories(include)
 
-add_library(ox2editor STATIC src/sizerptpanel.cpp include/ox2/editor/sizerptpanel.h)
+add_library(ox2editor STATIC 
+	src/frame.cpp include/ox2/editor/frame.h
+	src/sizerptpanel.cpp include/ox2/editor/sizerptpanel.h)
 target_link_libraries(ox2editor ${wxWidgets_LIBRARIES})
 	
 #install (FILES "${PROJECT_BINARY_DIR}/TutorialConfig.h"        
