@@ -8,16 +8,15 @@
 
 #include "core.h"
 
-#include <ox2/editor/sizerptpanel.h>
+#include <ox2/editor/frame.h>
 
 // -- frame --
-class wxSizeReportCtrl;
 
 
 class wxFileHistory;
 class wxSlider;
 
-class MainFrame : public wxFrame
+class MainFrame : public ox2::editor::Frame
 {
     enum
     {
@@ -26,7 +25,6 @@ class MainFrame : public wxFrame
         ID_CreateText,
         ID_CreateHTML,
         ID_CreateNotebook,
-        ID_CreateSizeReport,
         ID_GridContent,
         ID_TextContent,
         ID_TreeContent,
@@ -80,12 +78,9 @@ class MainFrame : public wxFrame
 		StatusBarField_Count,
 	};
 public:
-    MainFrame(wxWindow* parent,
-            wxWindowID id,
-            const wxString& title,
+    MainFrame(const wxString& title,
             const wxPoint& pos = wxDefaultPosition,
-            const wxSize& size = wxDefaultSize,
-            long style = wxDEFAULT_FRAME_STYLE | wxSUNKEN_BORDER);
+            const wxSize& size = wxDefaultSize);
 
     ~MainFrame();
 
@@ -96,7 +91,6 @@ public:
 protected:
 	wxMenuBar* CreateMenuBar();
     wxTextCtrl* CreateTextCtrl(const wxString& text = wxEmptyString);
-	ox2::editor::wxSizeReportCtrl* CreateSizeReportCtrl(int width = 80, int height = 80);
     wxPoint GetStartPosition();
     //wxHtmlWindow* CreateHTMLCtrl(wxWindow* parent = NULL);
 
@@ -111,7 +105,6 @@ protected:
     void OnViewPropertyTool(wxCommandEvent& evt);
     void OnCreateNotebook(wxCommandEvent& evt);
     void OnCreateText(wxCommandEvent& evt);
-    void OnCreateSizeReport(wxCommandEvent& evt);
     void OnDropDownToolbarItem(wxAuiToolBarEvent& evt);
     void OnCreatePerspective(wxCommandEvent& evt);
     void OnCopyPerspectiveCode(wxCommandEvent& evt);

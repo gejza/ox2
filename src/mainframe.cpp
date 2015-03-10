@@ -43,7 +43,7 @@
 #include "resources.h"
 #include "app.h"
 
-
+#include <ox2/editor/sizerptpanel.h>
 
 
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
@@ -52,7 +52,6 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(MainFrame::ID_CreateTree, MainFrame::OnCreateTree)
 	EVT_MENU(MainFrame::ID_ViewPropertyTool, MainFrame::OnViewPropertyTool)
     EVT_MENU(MainFrame::ID_CreateText, MainFrame::OnCreateText)
-    EVT_MENU(MainFrame::ID_CreateSizeReport, MainFrame::OnCreateSizeReport)
     EVT_MENU(MainFrame::ID_CreateNotebook, MainFrame::OnCreateNotebook)
     EVT_MENU(MainFrame::ID_CreatePerspective, MainFrame::OnCreatePerspective)
     EVT_MENU(MainFrame::ID_CopyPerspectiveCode, MainFrame::OnCopyPerspectiveCode)
@@ -130,18 +129,12 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 wxEND_EVENT_TABLE()
 
 
-MainFrame::MainFrame(wxWindow* parent,
-                 wxWindowID id,
-                 const wxString& title,
+MainFrame::MainFrame(const wxString& title,
                  const wxPoint& pos,
-                 const wxSize& size,
-                 long style)
-        : wxFrame(parent, id, title, pos, size, style)
+                 const wxSize& size)
+        : ox2::editor::Frame(0, 0, wxID_ANY, title, pos, size)
 {
 	CoreTraits::get(this);
-
-    // tell wxAuiManager to manage this frame
-    m_mgr.SetManagedWindow(this);
 
     // set frame icon
     SetIcon(wxICON(logo));
@@ -467,7 +460,6 @@ MainFrame::~MainFrame()
   wxString s = m_mgr.SavePerspective();
   pConfig->Write(_T("/MainFrame/Perspective"), s);
 
-    m_mgr.UnInit();
 }
 
 wxMenuBar* MainFrame::CreateMenuBar()
@@ -501,7 +493,6 @@ wxMenuBar* MainFrame::CreateMenuBar()
 	view_menu->Append(ID_CreateText, _("Create Text Control"));
 	view_menu->Append(ID_CreateTree, _("Create Tree"));
 	view_menu->Append(ID_CreateNotebook, _("Create Notebook"));
-	view_menu->Append(ID_CreateSizeReport, _("Create Size Reporter"));
 	view_menu->AppendSeparator();
 	view_menu->Append(ID_GridContent, _("Use a Grid for the Content Pane"));
 	view_menu->Append(ID_TextContent, _("Use a Text Control for the Content Pane"));
@@ -1012,15 +1003,6 @@ void MainFrame::OnCreateText(wxCommandEvent& WXUNUSED(event))
     m_mgr.Update();
 }
 
-void MainFrame::OnCreateSizeReport(wxCommandEvent& WXUNUSED(event))
-{
-    m_mgr.AddPane(CreateSizeReportCtrl(), wxAuiPaneInfo().
-                  Caption(wxT("Client Size Reporter")).
-                  Float().FloatingPosition(GetStartPosition()).
-                  CloseButton(true).MaximizeButton(true));
-    m_mgr.Update();
-}
-
 void MainFrame::OnDropDownToolbarItem(wxAuiToolBarEvent& evt)
 {
     if (evt.IsDropDownClicked())
@@ -1197,14 +1179,6 @@ void MainFrame::OnTreeItemChanged(wxTreeEvent& event)
 		CoreTraits::get()->GetScene()->select(n->get());
 	}
 	//CoreTraits::Get()->GetCmds()->Sub();
-}
-
-ox2::editor::wxSizeReportCtrl* MainFrame::CreateSizeReportCtrl(int width, int height)
-{
-	ox2::editor::wxSizeReportCtrl* ctrl = new ox2::editor::wxSizeReportCtrl(this, wxID_ANY,
-                                   wxDefaultPosition,
-                                   wxSize(width, height), &m_mgr);
-    return ctrl;
 }
 
 /*wxHtmlWindow* MainFrame::CreateHTMLCtrl(wxWindow* parent)

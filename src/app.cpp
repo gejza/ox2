@@ -119,9 +119,7 @@ bool MyApp::OnInit()
 	}
 
 	wxLogVerbose("Verbose logging enabled!");
-	MainFrame* frame = new MainFrame(NULL,
-                                 wxID_ANY,
-                                 GetAppDisplayName(),
+	MainFrame* frame = new MainFrame(GetAppDisplayName(),
                                  wxDefaultPosition,
                                  wxSize(800, 600));
 
