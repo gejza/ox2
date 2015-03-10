@@ -86,16 +86,13 @@ void initLanguageSupport()
 
 bool MyApp::OnInit()
 {
-	if ( !wxApp::OnInit() )
-        return false;
-
-	// make sure to call this first
-	::wxInitAllImageHandlers();
-
     // Fill in the application information fields before creating wxConfig.
     SetVendorName(wxT("CanBee"));
     SetAppName(wxT("oxygine2d-editor"));
     SetAppDisplayName(wxT("Oxygine Scene editor"));
+
+	if ( !ox2::editor::App::OnInit() )
+        return false;
 
 	wxConfigBase *pConfig = wxConfigBase::Get();
 	pConfig->SetRecordDefaults();
@@ -119,10 +116,10 @@ bool MyApp::OnInit()
 	}
 
 	wxLogVerbose("Verbose logging enabled!");
-	MainFrame* frame = new MainFrame(GetAppDisplayName(),
+	MainFrame* frame = new MainFrame(m_docs, GetAppDisplayName(),
                                  wxDefaultPosition,
                                  wxSize(800, 600));
-
+	RecreateGUI();
 	/*
     SplashScreen * splash = new SplashScreen(bitmap, 8, 0, -1, wxNO_BORDER | wxFRAME_SHAPED);
 	std::cout << "* Splash Screen created" << std::endl;
@@ -137,6 +134,11 @@ bool MyApp::OnInit()
     return true;
 }
 
+void MyApp::RecreateGUI()
+{
+}
+
+
 int MyApp::OnExit()
 {
     // clean up: Set() returns the active config object as Get() does, but unlike
@@ -144,10 +146,8 @@ int MyApp::OnExit()
     // we want here!)
     delete wxConfigBase::Set((wxConfigBase *) NULL);
 
-    return 0;
+    return ox2::editor::App::OnExit();
 }
-
-
 
 
 void MyApp::ShowPreferencesEditor(wxWindow* parent)

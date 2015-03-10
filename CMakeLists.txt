@@ -81,7 +81,8 @@ include_directories(include)
 
 add_library(ox2editor STATIC 
 	src/frame.cpp include/ox2/editor/frame.h
-	src/sizerptpanel.cpp include/ox2/editor/sizerptpanel.h)
+	src/sizerptpanel.cpp include/ox2/editor/sizerptpanel.h
+	src/editor_app.cpp include/ox2/editor/app.h)
 target_link_libraries(ox2editor ${wxWidgets_LIBRARIES})
 	
 #install (FILES "${PROJECT_BINARY_DIR}/TutorialConfig.h"        

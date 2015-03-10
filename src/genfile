@@ -56,9 +56,11 @@ cat > ${fn}.h <<END
 
 /* === C L A S S E S & S T R U C T S ======================================= */
 
-namespace studio {
+namespace ox2 {
+namespace editor {
 
-}; // END of namespace studio
+}; // END of namespace editor
+}; // END of namespace ox2
 
 /* === E N D =============================================================== */
 

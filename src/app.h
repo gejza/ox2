@@ -3,8 +3,9 @@
 #include <wx/app.h>
 #include "prefs.h"
 // -- application --
+#include <ox2/editor/app.h>
 
-class MyApp : public wxApp
+class MyApp : public ox2::editor::App
 {
 public:
     virtual bool OnInit();
@@ -12,6 +13,8 @@ public:
 
 	virtual void OnInitCmdLine(wxCmdLineParser& parser);
 	virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
+
+	virtual void RecreateGUI();
 
 	void ShowPreferencesEditor(wxWindow* parent);
 	void DismissPreferencesEditor();

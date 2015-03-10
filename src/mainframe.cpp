@@ -129,10 +129,10 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 wxEND_EVENT_TABLE()
 
 
-MainFrame::MainFrame(const wxString& title,
+MainFrame::MainFrame(wxDocManager* docs, const wxString& title,
                  const wxPoint& pos,
                  const wxSize& size)
-        : ox2::editor::Frame(0, 0, wxID_ANY, title, pos, size)
+        : ox2::editor::Frame(docs, 0, wxID_ANY, title, pos, size)
 {
 	CoreTraits::get(this);
 

@@ -78,7 +78,7 @@ class MainFrame : public ox2::editor::Frame
 		StatusBarField_Count,
 	};
 public:
-    MainFrame(const wxString& title,
+    MainFrame(wxDocManager* docs, const wxString& title,
             const wxPoint& pos = wxDefaultPosition,
             const wxSize& size = wxDefaultSize);
 
@@ -138,7 +138,6 @@ protected:
 	void OnSlider(wxScrollEvent& event);
 private:
 
-    wxAuiManager m_mgr;
 	wxFileHistory* mFileHistory;
     wxArrayString m_perspectives;
     wxMenu* m_perspectives_menu;
