@@ -9,7 +9,6 @@ class MyApp : public ox2::editor::App
 {
 public:
     virtual bool OnInit();
-	virtual int OnExit();
 
 	virtual void OnInitCmdLine(wxCmdLineParser& parser);
 	virtual bool OnCmdLineParsed(wxCmdLineParser& parser);

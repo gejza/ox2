@@ -94,9 +94,6 @@ bool MyApp::OnInit()
 	if ( !ox2::editor::App::OnInit() )
         return false;
 
-	wxConfigBase *pConfig = wxConfigBase::Get();
-	pConfig->SetRecordDefaults();
-
 	initLanguageSupport();
 	wxLog::AddTraceMask(wxTRACE_ResAlloc);
 
@@ -136,17 +133,6 @@ bool MyApp::OnInit()
 
 void MyApp::RecreateGUI()
 {
-}
-
-
-int MyApp::OnExit()
-{
-    // clean up: Set() returns the active config object as Get() does, but unlike
-    // Get() it doesn't try to create one if there is none (definitely not what
-    // we want here!)
-    delete wxConfigBase::Set((wxConfigBase *) NULL);
-
-    return ox2::editor::App::OnExit();
 }
 
 

@@ -44,6 +44,9 @@ bool ox2::editor::App::OnInit()
 	// make sure to call this first
 	wxInitAllImageHandlers();
 	
+	wxConfigBase *pConfig = wxConfigBase::Get();
+	pConfig->SetRecordDefaults();
+
 	//// Create a document manager
 	m_docs = new wxDocManager;
 
@@ -55,6 +58,11 @@ int ox2::editor::App::OnExit()
 	wxDocManager * const manager = wxDocManager::GetDocumentManager();
 	manager->FileHistorySave(*wxConfig::Get());
 	delete manager;
+
+    // clean up: Set() returns the active config object as Get() does, but unlike
+    // Get() it doesn't try to create one if there is none (definitely not what
+    // we want here!)
+    delete wxConfigBase::Set((wxConfigBase *) NULL);
 
 	return wxApp::OnExit();
 }
